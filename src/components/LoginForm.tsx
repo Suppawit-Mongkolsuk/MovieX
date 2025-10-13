@@ -1,52 +1,69 @@
 import React, { useState } from "react";
-import "./LoginForm.css";
 
 const LoginForm: React.FC = () => {
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert(`Email: ${email}\nPassword: ${password}`);
+    alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
   };
 
   return (
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2 className="login-title">เข้าสู่ระบบ</h2>
-
-        <div className="form-group">
-          <label htmlFor="email">อีเมล</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="กรอกอีเมลของคุณ"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="password">รหัสผ่าน</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="กรอกรหัสผ่าน"
-            required
-          />
-        </div>
-
-        <button type="submit" className="btn-login">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-400 to-indigo-600">
+      {/* กล่อง login form */}
+      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+        {/* หัวข้อ */}
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           เข้าสู่ระบบ
-        </button>
+        </h2>
 
-        <p className="register-text">
-          ยังไม่มีบัญชี? <a href="#" className="link">สมัครสมาชิก</a>
+        {/* ฟอร์ม */}
+        <form onSubmit={handleSubmit}>
+          {/* ช่องกรอกอีเมล */}
+          <div className="mb-4">
+            <label className="block text-gray-700 font-medium mb-1">อีเมล</label>
+            <input
+              type="email"
+              placeholder="กรอกอีเมลของคุณ"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* ช่องกรอกรหัสผ่าน */}
+          <div className="mb-6">
+            <label className="block text-gray-700 font-medium mb-1">รหัสผ่าน</label>
+            <input
+              type="password"
+              placeholder="กรอกรหัสผ่าน"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          {/* ปุ่มเข้าสู่ระบบ */}
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          >
+            เข้าสู่ระบบ
+          </button>
+        </form>
+
+        {/* ลิงก์สมัครสมาชิก */}
+        <p className="mt-4 text-center text-sm text-gray-600">
+          ยังไม่มีบัญชี?{" "}
+          <a href="#" className="text-blue-600 hover:underline">
+            สมัครสมาชิก
+          </a>
         </p>
-      </form>
+      </div>
     </div>
   );
 };
