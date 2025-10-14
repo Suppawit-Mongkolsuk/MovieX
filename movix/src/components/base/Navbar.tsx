@@ -2,10 +2,13 @@ import React from 'react';
 import { Navbarmenu } from '../../data/Navbar';
 import { RiMovie2AiLine } from "react-icons/ri";
 import { FaSearch } from "react-icons/fa";
-
+import { IoMdMenu } from "react-icons/io";
+import Responsive from './responsive_navbar';
 
 function Navbar() {
+  const [open, setopen] = React.useState(false);
   return (
+  <>
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xl  shadow-[0_2px_15px_rgba(0,0,0,0.3)]">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
@@ -30,7 +33,7 @@ function Navbar() {
         </div>
 
         {/* Search Bar */}
-        <div className="hidden md:flex items-center relative">
+        <div className="hidden md:flex items-center relative lg:justify-end">
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#d4af37] text-lg" />
           <input
             type="text"
@@ -39,7 +42,7 @@ function Navbar() {
           />
           {/* Profile Icon */}
           <button
-            className="relative w-10 h-10 rounded-full border border-[#d4af37]/60 bg-white/10 flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-[#d4af37] transition-all duration-200 ml-2"
+            className="w-10 h-10 rounded-full border border-[#d4af37]/60 bg-white/10 flex items-center justify-center overflow-hidden hover:ring-2 hover:ring-[#d4af37] transition-all duration-200 ml-2"
             aria-label="Profile"
           >  
           <img
@@ -49,8 +52,16 @@ function Navbar() {
             />
           </button>
         </div>
+
+        {/* ปุ่มกด Mobile */}
+        <div className='md:hidden' onClick={() => setopen(!open)}>
+          <IoMdMenu className='text-3xl'/>
+        </div>
       </div>
     </nav>
+    {/* menu mobile */}
+    <Responsive open = {open}/>
+  </>
   );
 }
 
