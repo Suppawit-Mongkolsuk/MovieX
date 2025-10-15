@@ -1,3 +1,4 @@
+
 interface CardProps {
   title : string;
   imageUrl : string;
@@ -31,9 +32,9 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time , onClick }) =>
 
       {/* Movie Info */}
       <div className="p-3 text-left">
-        <h3 className="text-movix-gold text-sm font-semibold mb-1">{date}</h3>
-        <h3 className="text-white text-lg font-semibold leading-tight">{title}</h3>
-        <p className="text-gray-300 text-sm font-medium mt-1">{time}</p>
+        <div className="text-movix-gold mb-1 font-semibold text-xs md:text-lg ">{date}</div>
+        <div className="text-white font-semibold text-xs md:text-lg ">{title}</div>
+        <div className="text-gray-400 text-xs md:text-sm">Duration: {time} mins</div>
       </div>
     </div>
   );

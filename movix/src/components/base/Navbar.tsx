@@ -12,8 +12,8 @@ function Navbar() {
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xl  shadow-[0_2px_15px_rgba(0,0,0,0.3)]">
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2 text-2xl font-bold text-white">
-          <span className="text-red-600 text-4xl">
+        <div className="flex items-center gap-2 text-base md:text-2xl font-bold text-white gap-x-1">
+          <span className="text-red-600 text-3xl md:text-4xl">
             <RiMovie2AiLine />
           </span>
           <span className="tracking-wide">MOVIX</span>
