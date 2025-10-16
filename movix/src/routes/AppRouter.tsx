@@ -11,6 +11,7 @@ import Movie from "../pages/user/Movie";
 import Payment from "../pages/user/Payment";
 import Seat from "../pages/user/Seat";
 import Ticket from "../pages/user/Ticket";
+import About from "../pages/user/About";
 
 /*ADMIN PAGES*/                                                                                    
 import ManageMovies from "../pages/admin/ManageMovie";
@@ -29,6 +30,7 @@ const AppRouter = () => {
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/ticket" element={<Ticket />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/about" element={<About />} />
 
                 {/* Admin Routes */}
                 <Route path="/admin/movies" element={<ManageMovies />} />
