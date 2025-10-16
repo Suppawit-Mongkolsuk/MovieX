@@ -31,10 +31,10 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time , onClick }) =>
       </div>
 
       {/* Movie Info */}
-      <div className="p-3 text-left">
-        <div className="text-movix-gold mb-1 font-semibold text-xs md:text-lg ">{date}</div>
+      <div className="p-0 text-left">
+        <div className="text-movix-gold mt-2 mb-1 font-semibold text-xs md:text-lg ">{date}</div>
         <div className="text-white font-semibold text-xs md:text-lg ">{title}</div>
-        <div className="text-gray-400 text-xs md:text-sm">Duration: {time} mins</div>
+        <div className="text-gray-400 text-xs md:text-sm mb-2">{time}mins</div>
       </div>
     </div>
   );
