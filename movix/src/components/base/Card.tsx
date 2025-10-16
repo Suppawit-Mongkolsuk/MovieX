@@ -1,12 +1,14 @@
 
-interface CardProps {
+export interface CardProps {
+  id?: string | number;
   title : string;
   imageUrl : string;
   date : string;
   time: number | string;
+  genre?: string;
   onClick?: () => void;
 };
-const Card: React.FC<CardProps> = ({ title, imageUrl, date, time , onClick }) => {
+const Card: React.FC<CardProps> = ({ title, imageUrl, date, time ,genre, onClick }) => {
   return (
     <div
       onClick={onClick}
@@ -35,6 +37,7 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time , onClick }) =>
         <div className="text-movix-gold mt-2 mb-1 font-semibold text-xs md:text-lg ">{date}</div>
         <div className="text-white font-semibold text-xs md:text-lg ">{title}</div>
         <div className="text-gray-400 text-xs md:text-sm mb-2">{time}mins</div>
+        <div className="text-gray-400 text-xs md:text-sm mb-2">{genre}</div>
       </div>
     </div>
   );
