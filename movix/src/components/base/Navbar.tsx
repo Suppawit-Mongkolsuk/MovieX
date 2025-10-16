@@ -7,6 +7,7 @@ import Responsive from './responsive_navbar';
 
 function Navbar() {
   const [open, setopen] = React.useState(false);
+
   return (
   <>
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/10 backdrop-blur-xl  shadow-[0_2px_15px_rgba(0,0,0,0.3)]">
@@ -31,7 +32,6 @@ function Navbar() {
             </a>
           ))}
         </div>
-
         {/* Search Bar */}
         <div className="hidden md:flex items-center relative lg:justify-end">
           <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#d4af37] text-lg" />

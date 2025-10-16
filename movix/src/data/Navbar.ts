@@ -7,16 +7,16 @@ export const Navbarmenu = [
     {
     id:2,
     title : "MOVIEX",
-    link : "#"
+    link : "/movies"
   },
     {
     id:3,
     title : "HISTORY",
-    link : "#"
+    link : "/history"
   },
     {
     id:4,
     title : "ABOUT",
-    link : "#"
+    link : "/about"
   },
 ]
