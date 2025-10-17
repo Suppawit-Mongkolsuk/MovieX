@@ -13,7 +13,6 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time ,genre, onClick
     <div
       onClick={onClick}
       className=" 
-        max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px]
         rounded-2xl 
         overflow-hidden 
         hover:scale-105 
