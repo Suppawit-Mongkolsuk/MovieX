@@ -12,9 +12,9 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-r from-black to-red-500 flex items-center justify-center">
+    <div className="min-h-screen w-full bg-gradient-to-r from-red-700 to-red-900 flex items-center justify-center">
       {/* กล่อง login form */}
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+      <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-[0_0_40px_rgba(255,255,255,0.1) rounded-2xl shadow-lg w-full max-w-md">
         {/* หัวข้อ */}
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">เข้าสู่ระบบ</h2>
 
