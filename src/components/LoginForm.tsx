@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PasswordInput from "./PasswordInput";
 
 const LoginForm: React.FC = () => {
 
@@ -35,14 +36,9 @@ const LoginForm: React.FC = () => {
           {/* ช่องกรอกรหัสผ่าน */}
           <div className="mb-6">
             <label className="block text-gray-700 font-medium mb-1">รหัสผ่าน</label>
-            <input
-              type="password"
-              placeholder="กรอกรหัสผ่านของคุณ"
+            <PasswordInput
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+              onChange={(e) => setPassword(e.target.value)}/>
           </div>
 
           {/* ปุ่มเข้าสู่ระบบ */}
