@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Mail } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 
 const LoginForm: React.FC = () => {
@@ -35,7 +36,6 @@ const LoginForm: React.FC = () => {
 
           {/* ช่องกรอกรหัสผ่าน */}
           <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-1">รหัสผ่าน</label>
             <PasswordInput
               value={password}
               onChange={(e) => setPassword(e.target.value)}/>
@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
           {/* ปุ่มเข้าสู่ระบบ */}
           <button
             type="submit"
-            className="w-full py-2 bg-blue-600 text-black rounded-lg hover:bg-blue-700 transition"
+            className="w-full py-2 text-black bg-white rounded-3xl  "
           >
             เข้าสู่ระบบ
           </button>
