@@ -11,13 +11,11 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen w-full bg-gradient-to-r from-blue-400 to-indigo-600">
+    <div className="min-h-screen w-full bg-gradient-to-r from-black to-red-500 flex items-center justify-center">
       {/* กล่อง login form */}
       <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
         {/* หัวข้อ */}
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          เข้าสู่ระบบ                                                                                        
-        </h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">เข้าสู่ระบบ</h2>
 
         {/* ฟอร์ม */}
         <form onSubmit={handleSubmit}>
