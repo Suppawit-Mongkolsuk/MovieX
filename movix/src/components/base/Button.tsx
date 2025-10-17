@@ -1,6 +1,6 @@
 import React from "react"
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  size?: | "sm" | "md" | "lg"
+  size?: "xs"| "sm" | "md" | "lg"
   variant?: "primary" | "secondary" | "danger" | "underfined"
   children?: React.ReactNode
 }
@@ -14,7 +14,7 @@ const Button: React.FC<ButtonProps> = ({
   ...props 
 }) => {
   const baseStyles =
-    `font-semibold rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-150 ease-in-out border disabled:opacity-60 disabled:cursor-not-allowed`;
+    `font-semibold rounded-lg w-fit whitespace-normal break-words`//focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-opacity-75 transition-all duration-150 ease-in-out border disabled:opacity-60 disabled:cursor-not-allowed`;
 
     let variantStyles = "";
     switch (variant) {
@@ -43,9 +43,8 @@ const Button: React.FC<ButtonProps> = ({
         break;
       case "underfined":
         variantStyles = `
-          bg-gray-600 text-white 
-          hover:border-black focus:ring-gray-500 
-          disabled:bg-gray-400 disabled:cursor-not-allowed
+          bg-gray-600/50 text-grey
+          disabled:bg-gray-400/50 disabled:cursor-not-allowed
         `;
         break;
       default:
@@ -57,6 +56,9 @@ const Button: React.FC<ButtonProps> = ({
     }
     let sizeStyles = "";
     switch (size) {
+      case "xs" :
+        sizeStyles = `px-2 py-1 text-xs`
+        break;
       case "sm" : 
         sizeStyles = `px-3 py-1 text-sm`
         break;

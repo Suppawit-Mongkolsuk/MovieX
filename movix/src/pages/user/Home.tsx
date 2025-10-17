@@ -19,9 +19,22 @@ function Home() {
     <div className="pt-16"> 
       <Navbar />
       <Banner/>
-      <h1 className="pt-8 ml-7 text-2xl font-semibold md:text-4xl">🎬 Now Showing</h1>
-      <div className="pt-8 px-6 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5  gap-4 max-w-7xl mx-auto">
-        {movies.map((movie) => (
+      <h1 className="pt-8 mb-3 text-2xl font-semibold flex justify-center md:text-4xl">🎬 Now Showing</h1>
+      <div className="pt-8 px-6 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4  gap-4 max-w-7xl mx-auto">
+        {movies.filter(m => m.status === "Now Showing").map((movie) => (
+          <Card
+            key={movie.id}
+            title={movie.title}
+            imageUrl={movie.poster}
+            date={movie.date}
+            time={movie.time}
+            genre={movie.genre}
+          />
+        ))}
+      </div>
+      <h1 className="pt-12 mb-3 text-2xl font-semibold flex justify-center md:text-4xl">🍿 Coming Soon</h1>
+      <div className="pt-8 px-6 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4  gap-4 max-w-7xl mx-auto pb-12">
+        {movies.filter(m => m.status === "Coming Soon").map((movie) => (
           <Card
             key={movie.id}
             title={movie.title}

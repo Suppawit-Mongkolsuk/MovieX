@@ -1,4 +1,4 @@
-
+import Button from "./Button";
 export interface CardProps {
   id?: string | number;
   title : string;
@@ -23,7 +23,7 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time ,genre, onClick
       "
     >
       {/* Movie Poster */}
-      <div className="w-full aspect-[2/3] overflow-hidden rounded-2xl shadow-lg shadow-black/40">
+      <div className="w-full h-[300] overflow-hidden rounded-2xl shadow-lg shadow-black/40">
         <img
           src={imageUrl}
           alt={title}
@@ -35,8 +35,10 @@ const Card: React.FC<CardProps> = ({ title, imageUrl, date, time ,genre, onClick
       <div className="p-0 text-left">
         <div className="text-movix-gold mt-2 mb-1 font-semibold text-xs md:text-lg ">{date}</div>
         <div className="text-white font-semibold text-xs md:text-lg ">{title}</div>
-        <div className="text-gray-400 text-xs md:text-sm mb-2">{time}mins</div>
-        <div className="text-gray-400 text-xs md:text-sm mb-2">{genre}</div>
+        <div className="flex flex-wrap gap-2 mt-1 mb-4 ">
+          <Button variant="underfined" size="xs" disabled>{time}mins</Button>
+          <Button variant="underfined" size="xs" disabled>{genre}</Button>
+        </div>
       </div>
     </div>
   );

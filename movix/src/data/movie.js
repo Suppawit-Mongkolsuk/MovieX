@@ -25,8 +25,8 @@
     "genre": "Action",
     "time": 148,
     "status": "Now Showing",
-    "trailer":"https://youtu.be/Y1PufTyBdts",
-    "poster": "https://upload.wikimedia.org/wikipedia/en/thumb/0/00/Spider-Man_No_Way_Home_poster.jpg/250px-Spider-Man_No_Way_Home_poster.jpg",
+    "trailer":"https://youtu.be/VAP8Qh-EhhM",
+    "poster": "https://res.cloudinary.com/da1kj73c0/image/upload/v1760702604/official-poster-for-relay-v0-i9ev0q3jm39f1_zvjiwu.webp",
     "date": "2025-09-15"
   },
   {

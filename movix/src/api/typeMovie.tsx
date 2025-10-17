@@ -2,6 +2,7 @@ interface Movie {
   id: string
   title: string
   poster: string
+  trailer: string
   time: number
   date: string
   genre: string

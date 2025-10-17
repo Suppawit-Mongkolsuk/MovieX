@@ -4,7 +4,7 @@ const Banner = () => {
 
   return (
     
-    <div className="max-w-{1440px] max-h-[500px] mx-auto oject-cover justify-center ">
+    <div className="max-w-{1440px] max-h-[500px] mx-auto oject-cover flex justify-center">
       <img src={postter} alt=""></img>
     </div>
     
