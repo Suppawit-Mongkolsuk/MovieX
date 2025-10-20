@@ -1,13 +1,15 @@
 import React, { useState , useEffect } from "react";
 import { Mail } from "lucide-react";
 import PasswordInput from "./PasswordInput";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoginForm: React.FC = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-   const [error, setError] = useState("");
+  const [error, setError] = useState("");
+  const [shake, setShake] = useState(false);
 
   const [currentImage , setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
@@ -22,6 +24,7 @@ const LoginForm: React.FC = () => {
     "/src/assets/Bg7.jpg",
     "/src/assets/Bg8.jpg"
   ];
+
 // ใช้ useEffect เพื่อเปลี่ยนภาพทุก 5 วิ พร้อมทำ transition
   useEffect(() => {
     const interval = setInterval (() => {
@@ -35,24 +38,33 @@ const LoginForm: React.FC = () => {
     return () => clearInterval(interval);
   },[]);
 
+  // เข้าเงื่อนไขถ้าใส่รหัสหรืออีเมลไม่ครบให้สั่น
     const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!email.trim() || !password.trim()) {
+    setShake(false);
+
+    setTimeout(() => {
+    if (!email.trim() && !password.trim()) {
       setError("⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบก่อนเข้าสู่ระบบ");
-      return; // หยุดทำงานตรงนี้ ไม่ให้ alert ต่อ
-    }
-
-    // ถ้าครบ เคลียร์ error เดิมออก
-    setError("");
-
-    // ดำเนินการเข้าสู่ระบบ
-    alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
-  };
+      setShake(true);
+  } else if (!email.trim()) {
+      setError("⚠️ กรุณากรอกอีเมลก่อนเข้าสู่ระบบ");
+      setShake(true);
+  } else if (!password.trim()) {
+      setError("⚠️ กรุณากรอกรหัสผ่านก่อนเข้าสู่ระบบ");
+      setShake(true);
+  } else {
+      setError("");
+      alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
+  }
+ }, 50);
+};
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
 
+    {/* 🔁 พื้นหลัง */}
       <img
         key={currentImage}
         src={images[currentImage]}
@@ -62,26 +74,28 @@ const LoginForm: React.FC = () => {
         }`}
         style={{
           filter: "contrast(1.1) saturate(1.2)", //เพิ่มความคมของสี
-        }}
-      />
+}} />
     <div className="absolute inset-0 bg-black/30"></div>
         
       {/* กล่อง login form */}
-      <div className="bg-white/1 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-lg w-full max-w-md">
+      <motion.div
+        className="bg-white/10 backdrop-blur-xl border border-white/40 p-8 rounded-3xl shadow-lg w-full max-w-md"
+        animate={shake ? { x: [-8, 8, -6, 6, -4, 4, 0] } : { x: 0 }} // เอฟเฟกต์สั่น
+        transition={{ duration: 0.4 }}>
         <h2 className="text-3xl font-semibold text-center text-red-800 mb-10">MoiveX</h2>
 
         {/* ฟอร์ม */}
         <form onSubmit={handleSubmit} className="space-y-6">
+
           {/* อีเมล */}
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={18} />
             <input
-              type="email"
+              type="text"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full pl-10 py-2 bg-transparent border-b border-white/50 text-white placeholder-white/60 focus:outline-none focus:border-white transition"
-              required
             />
           </div>
 
@@ -101,14 +115,23 @@ const LoginForm: React.FC = () => {
               />
               Remember me
             </label>
-
             <a href="#" className="hover:underline hover:text-white">
               Forgot Password?
             </a>
           </div>
 
           {/* แสดงข้อความ error ถ้ามี error */}
-          {error && <p className="text-red-400 text-center text-sm">{error}</p>}
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                className="text-red-400 text-center text-sm"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3 }} >
+            {error}
+              </motion.p>)}
+          </AnimatePresence>
 
           {/* ปุ่มเข้าสู่ระบบ */}
           <button
@@ -124,12 +147,11 @@ const LoginForm: React.FC = () => {
           Don't have an account?{" "}
           <a href="#" className="text-blue-600 hover:underline">
             Register
-          </a>
-        </p>
-      </div>
+           </a>
+         </p>
+     </motion.div>
     </div>
   );
 };
-
 
 export default LoginForm;
