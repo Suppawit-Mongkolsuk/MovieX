@@ -80,6 +80,21 @@ const LoginForm: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}/>
           </div>
 
+          {/* ช่อง Remember me / Forgot Password */}
+          <div className="flex items-center justify-between text-sm text-white/70">
+            <label className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                className="accent-white/80 w-4 h-4 rounded border-white/50 bg-transparent"
+              />
+              Remember me
+            </label>
+
+            <a href="#" className="hover:underline hover:text-white">
+              Forgot Password?
+            </a>
+          </div>
+
           {/* ปุ่มเข้าสู่ระบบ */}
           <button
             type="submit"
