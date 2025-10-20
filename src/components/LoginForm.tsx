@@ -7,6 +7,8 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+   const [error, setError] = useState("");
+
   const [currentImage , setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -33,8 +35,18 @@ const LoginForm: React.FC = () => {
     return () => clearInterval(interval);
   },[]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!email.trim() || !password.trim()) {
+      setError("⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบก่อนเข้าสู่ระบบ");
+      return; // หยุดทำงานตรงนี้ ไม่ให้ alert ต่อ
+    }
+
+    // ถ้าครบ เคลียร์ error เดิมออก
+    setError("");
+
+    // ดำเนินการเข้าสู่ระบบ
     alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
   };
 
@@ -94,6 +106,9 @@ const LoginForm: React.FC = () => {
               Forgot Password?
             </a>
           </div>
+
+          {/* แสดงข้อความ error ถ้ามี error */}
+          {error && <p className="text-red-400 text-center text-sm">{error}</p>}
 
           {/* ปุ่มเข้าสู่ระบบ */}
           <button
