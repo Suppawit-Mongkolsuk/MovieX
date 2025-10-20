@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Mail } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 
@@ -7,20 +7,56 @@ const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [currentImage , setCurrentImage] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  const images = [
+    "/src/assets/Bg1.jpg",
+    "/src/assets/Bg2.jpg",
+    "/src/assets/Bg3.jpg",
+    "/src/assets/Bg4.jpg",
+    "/src/assets/Bg5.jpg",
+    "/src/assets/Bg6.jpg",
+    "/src/assets/Bg7.jpg",
+    "/src/assets/Bg8.jpg"
+  ];
+// ใช้ useEffect เพื่อเปลี่ยนภาพทุก 5 วิ พร้อมทำ transition
+  useEffect(() => {
+    const interval = setInterval (() => {
+      setFade(false); // เริ่ม fade out
+      setTimeout(() => {
+        setCurrentImage((prev) => (prev + 1)% images.length); // เปลี่ยนภาพ
+        setFade(true); // fade in
+      },1000); // .. วิระหว่าง fade
+    },5000); // ทุก .. วิ
+
+    return () => clearInterval(interval);
+  },[]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-cover bg-center"
-      style={{
-        backgroundImage: "url('/src/assets/B3.jpg')", // รูปพื้นหลัง
-      }}>
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+
+      <img
+        key={currentImage}
+        src={images[currentImage]}
+        alt="background"
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+          fade ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          filter: "contrast(1.1) saturate(1.2)", //เพิ่มความคมของสี
+        }}
+      />
+    <div className="absolute inset-0 bg-black/30"></div>
         
       {/* กล่อง login form */}
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl shadow-[0_0_40px_rgba(255,255,255,0.1) rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-semibold text-center text-white mb-10">Login</h2>
+      <div className="bg-white/1 backdrop-blur-xl border border-white/50 p-8 rounded-3xl shadow-lg w-full max-w-md">
+        <h2 className="text-3xl font-semibold text-center text-red-800 mb-10">MoiveX</h2>
 
         {/* ฟอร์ม */}
         <form onSubmit={handleSubmit} className="space-y-6">
