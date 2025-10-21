@@ -38,7 +38,7 @@ const LoginForm: React.FC = () => {
     return () => clearInterval(interval);
   },[]);
 
-  // เข้าเงื่อนไขถ้าใส่รหัสหรืออีเมลไม่ครบให้สั่น
+  // เข้าเงื่อนไขถ้าใส่รหัสหรืออีเมลให้สั่น
     const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -74,7 +74,7 @@ const LoginForm: React.FC = () => {
         }`}
         style={{
           filter: "contrast(1.1) saturate(1.2)", //เพิ่มความคมของสี
-}} />
+ }} />
     <div className="absolute inset-0 bg-black/30"></div>
         
       {/* กล่อง login form */}
@@ -115,7 +115,7 @@ const LoginForm: React.FC = () => {
               />
               Remember me
             </label>
-            <a href="#" className="hover:underline hover:text-white">
+            <a href="#"  className="hover:underline underline-offset-4 text-blue-400">
               Forgot Password?
             </a>
           </div>
@@ -136,8 +136,9 @@ const LoginForm: React.FC = () => {
           {/* ปุ่มเข้าสู่ระบบ */}
           <button
             type="submit"
-            className="w-full py-2 font-semibold text-black bg-white rounded-2xl  "
-          >
+            className="w-full py-2 font-semibold text-black bg-white rounded-2xl shadow-md
+             hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-400 hover:text-white
+             hover:-translate-y-1 hover:shadow-lg transform transition-all duration-300">
             Login
           </button>
         </form>
@@ -145,7 +146,7 @@ const LoginForm: React.FC = () => {
         {/* ลิงก์สมัครสมาชิก */}
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="hover:underline underline-offset-4 text-blue-400">
             Register
            </a>
          </p>
