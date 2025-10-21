@@ -13,7 +13,7 @@ const LoginForm: React.FC = () => {
   const [shake, setShake] = useState(false);
 
   const [currentImage , setCurrentImage] = useState(0);
-  const [ , setFade] = useState(true);
+  const [fade , setFade] = useState(true);
 
   const navigate = useNavigate();
   const goToRegister = () => {
@@ -80,10 +80,12 @@ const LoginForm: React.FC = () => {
           alt={`background-${index}`}
           className="absolute inset-0 w-full h-full object-cover"
           style={{
-            opacity: currentImage === index ? 1 : 0,
             filter: "contrast(1.1) saturate(1.2)",
           }}
-          animate={{ opacity: currentImage === index ? 1 : 0 , scale: 1.05 }}
+          animate={{
+            opacity: currentImage === index ? (fade ? 1 : 0) : 0,
+            scale: currentImage === index ? 1.05 : 1,
+          }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
         />
       ))}
@@ -128,9 +130,12 @@ const LoginForm: React.FC = () => {
               />
               Remember me
             </label>
-            <a href="#"  className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105">
-              Forgot Password?
-            </a>
+            <button
+                type="button"
+                onClick={() => navigate("/forgot-password")}
+                className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition">
+                Forgot Password?
+            </button>
           </div>
 
           {/* แสดงข้อความ error ถ้ามี error */}

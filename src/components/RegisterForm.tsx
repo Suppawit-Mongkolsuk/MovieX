@@ -15,7 +15,7 @@ const RegisterForm: React.FC = () => {
     const [shake, setShake] = useState(false);
 
     const [currentImage, setCurrentImage] = useState(0);
-    const [ , setFade] = useState(true);
+    const [fade, setFade] = useState(true);
 
     const navigate = useNavigate();
 
@@ -81,10 +81,12 @@ const RegisterForm: React.FC = () => {
               alt={`background-${index}`}
               className="absolute inset-0 w-full h-full object-cover"
               style={{
-                opacity: currentImage === index ? 1 : 0,
                 filter: "contrast(1.1) saturate(1.2)",
               }}
-              animate={{ opacity: currentImage === index ? 1 : 0 , scale: 1.05 }}
+              animate={{
+                opacity: currentImage === index ? (fade ? 1 : 0) : 0,
+                scale: currentImage === index ? 1.05 : 1,
+              }}
               transition={{ duration: 1.2, ease: "easeInOut" }}
             />
         ))}

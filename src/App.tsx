@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
+import ForgotPasswordForm from "./components/ForgotPassword";
 import { AnimatePresence, motion } from "framer-motion";
 
 const App: React.FC = () => {
@@ -12,6 +13,7 @@ const App: React.FC = () => {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<PageWrapper><LoginForm /></PageWrapper>} />
         <Route path="/register" element={<PageWrapper><RegisterForm /></PageWrapper>} />
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
       </Routes>
     </AnimatePresence>
   );
