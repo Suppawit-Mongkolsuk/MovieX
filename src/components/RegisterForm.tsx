@@ -25,6 +25,13 @@ const RegisterForm: React.FC = () => {
     "/src/assets/Bg3.jpg",
     "/src/assets/Bg4.jpg",
     "/src/assets/Bg5.jpg",
+    "/src/assets/Bg6.jpg",
+    "/src/assets/Bg7.jpg",
+    "/src/assets/Bg8.jpg",
+    "/src/assets/Bg9.jpg",
+    "/src/assets/Bg10.jpg",
+    "/src/assets/Bg11.jpg",
+    "/src/assets/Bg12.jpg"
   ];
 
    useEffect(() => {
@@ -33,10 +40,10 @@ const RegisterForm: React.FC = () => {
       setTimeout(() => {
         setCurrentImage((prev) => (prev + 1) % images.length);
         setFade(true);
-      }, 1000);
-    }, 5000);
+      },700); // .. วิระหว่าง fade
+    },4500); // ทุก .. วิ
     return () => clearInterval(interval);
-  }, []);
+  }, []); 
 
   // ตรวจสอบข้อมูลก่อนสมัคร
   const handleSubmit = (e: React.FormEvent) => {

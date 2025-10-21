@@ -28,7 +28,11 @@ const LoginForm: React.FC = () => {
     "/src/assets/Bg5.jpg",
     "/src/assets/Bg6.jpg",
     "/src/assets/Bg7.jpg",
-    "/src/assets/Bg8.jpg"
+    "/src/assets/Bg8.jpg",
+    "/src/assets/Bg9.jpg",
+    "/src/assets/Bg10.jpg",
+    "/src/assets/Bg11.jpg",
+    "/src/assets/Bg12.jpg"
   ];
 
 // ใช้ useEffect เพื่อเปลี่ยนภาพทุก 5 วิ พร้อมทำ transition
@@ -38,8 +42,8 @@ const LoginForm: React.FC = () => {
       setTimeout(() => {
         setCurrentImage((prev) => (prev + 1)% images.length); // เปลี่ยนภาพ
         setFade(true); // fade in
-      },1000); // .. วิระหว่าง fade
-    },5000); // ทุก .. วิ
+      },700); // .. วิระหว่าง fade
+    },4500); // ทุก .. วิ
 
     return () => clearInterval(interval);
   },[]);
