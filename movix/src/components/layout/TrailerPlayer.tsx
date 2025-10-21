@@ -2,7 +2,7 @@ interface TrailerPlayerProps {
   url: string;
   title?: string;
 }
-
+// เเปลงลิงก์วิดีโอเป็นรูปเเบบ embed
 const TrailerPlayer: React.FC<TrailerPlayerProps> = ({ url, title }) => {
   const getEmbedUrl = (url: string) => {
     if (!url) return '';
