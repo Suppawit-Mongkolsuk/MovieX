@@ -133,7 +133,7 @@ const LoginForm: React.FC = () => {
             <button
                 type="button"
                 onClick={() => navigate("/forgot-password")}
-                className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition">
+                className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105">
                 Forgot Password?
             </button>
           </div>

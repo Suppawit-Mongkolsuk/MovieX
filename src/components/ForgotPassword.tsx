@@ -13,6 +13,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   const [currentImage, setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
+  const [pageFade, setPageFade] = useState(true);
 
   const navigate = useNavigate();
 
@@ -81,23 +82,28 @@ const ForgotPasswordForm: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-      {images.map((img, index) => (
-        <motion.img
-            key={index}
-            src={img}
-            alt={`background-${index}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-                filter: "contrast(1.1) saturate(1.2)",
-            }}
-            animate={{
-                opacity: currentImage === index ? (fade ? 1 : 0) : 0,
-                scale: currentImage === index ? 1.05 : 1,
-            }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
-         />
-      ))}
+    <motion.div
+  className="relative min-h-screen w-full flex items-center justify-center overflow-hidden"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: pageFade ? 1 : 0 }}
+  transition={{ duration: 0.8, ease: "easeInOut" }}
+>
+  {images.map((img, index) => (
+    <motion.img
+      key={index}
+      src={img}
+      alt={`background-${index}`}
+      className="absolute inset-0 w-full h-full object-cover"
+      style={{
+        filter: "contrast(1.1) saturate(1.2)",
+      }}
+      animate={{
+        opacity: currentImage === index ? (fade ? 1 : 0) : 0,
+        scale: currentImage === index ? 1.05 : 1,
+      }}
+      transition={{ duration: 1.2, ease: "easeInOut" }}
+    />
+))}
 
       <div className="absolute inset-0 bg-black/40"></div>
 
@@ -182,14 +188,16 @@ const ForgotPasswordForm: React.FC = () => {
           Remember your password?{" "}
           <button
             type="button"
-            onClick={() => navigate("/")}
-            className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition"
-          >
+            onClick={() => {
+                setPageFade(false);
+                setTimeout(() => navigate("/"), 800);
+        }}
+            className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105">
             Login
-          </button>
-        </p>
+            </button>
+            </p>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
