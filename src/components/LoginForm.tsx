@@ -2,6 +2,7 @@ import React, { useState , useEffect } from "react";
 import { Mail } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm: React.FC = () => {
 
@@ -12,7 +13,12 @@ const LoginForm: React.FC = () => {
   const [shake, setShake] = useState(false);
 
   const [currentImage , setCurrentImage] = useState(0);
-  const [fade, setFade] = useState(true);
+  const [ , setFade] = useState(true);
+
+  const navigate = useNavigate();
+  const goToRegister = () => {
+    navigate("/register");
+};
 
   const images = [
     "/src/assets/Bg1.jpg",
@@ -61,20 +67,23 @@ const LoginForm: React.FC = () => {
  }, 50);
 };
 
-  return (
+  return (                                                                                           // พืนหลัง
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+    {images.map((img, index) => (
+        <motion.img
+          key={index}
+          src={img}
+          alt={`background-${index}`}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{
+            opacity: currentImage === index ? 1 : 0,
+            filter: "contrast(1.1) saturate(1.2)",
+          }}
+          animate={{ opacity: currentImage === index ? 1 : 0 , scale: 1.05 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+        />
+      ))}
 
-    {/* 🔁 พื้นหลัง */}
-      <img
-        key={currentImage}
-        src={images[currentImage]}
-        alt="background"
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-          fade ? "opacity-100" : "opacity-0"
-        }`}
-        style={{
-          filter: "contrast(1.1) saturate(1.2)", //เพิ่มความคมของสี
- }} />
     <div className="absolute inset-0 bg-black/30"></div>
         
       {/* กล่อง login form */}
@@ -115,7 +124,7 @@ const LoginForm: React.FC = () => {
               />
               Remember me
             </label>
-            <a href="#"  className="hover:underline underline-offset-4 text-blue-400">
+            <a href="#"  className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105">
               Forgot Password?
             </a>
           </div>
@@ -146,13 +155,17 @@ const LoginForm: React.FC = () => {
         {/* ลิงก์สมัครสมาชิก */}
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <a href="#" className="hover:underline underline-offset-4 text-blue-400">
-            Register
-           </a>
-         </p>
-     </motion.div>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="button"
+            onClick={goToRegister}
+            className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105"> Register
+            </motion.button>
+          </p>
+      </motion.div>
     </div>
   );
-};
+ };
 
 export default LoginForm;
