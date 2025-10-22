@@ -3,6 +3,7 @@ import { Mail } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginForm: React.FC = () => {
 
@@ -48,27 +49,49 @@ const LoginForm: React.FC = () => {
     return () => clearInterval(interval);
   },[]);
 
-  // เข้าเงื่อนไขถ้าใส่รหัสหรืออีเมลให้สั่น
-    const handleSubmit = (e: React.FormEvent) => {
+
+    const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setError("");
     setShake(false);
 
-    setTimeout(() => {
-    if (!email.trim() && !password.trim()) {
-      setError("⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบก่อนเข้าสู่ระบบ");
-      setShake(true);
-  } else if (!email.trim()) {
-      setError("⚠️ กรุณากรอกอีเมลก่อนเข้าสู่ระบบ");
-      setShake(true);
-  } else if (!password.trim()) {
-      setError("⚠️ กรุณากรอกรหัสผ่านก่อนเข้าสู่ระบบ");
-      setShake(true);
-  } else {
-      setError("");
-      alert(`เข้าสู่ระบบด้วยอีเมล: ${email} และรหัสผ่าน: ${password}`);
+  if (!email.trim() && !password.trim()) {
+    setError("⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบก่อนเข้าสู่ระบบ");
+    setShake(false); 
+    setTimeout(() => setShake(true), 0); 
+    return;
   }
- }, 50);
+
+  if (!email.trim()) {
+    setError("⚠️ กรุณากรอกอีเมลก่อนเข้าสู่ระบบ");
+    setShake(false); 
+    setTimeout(() => setShake(true), 0); 
+    return;
+  }
+
+  if (!password.trim()) {
+    setError("⚠️ กรุณากรอกรหัสผ่านก่อนเข้าสู่ระบบ");
+    setShake(false); 
+    setTimeout(() => setShake(true), 0); 
+    return;
+  }
+
+  try {
+      const res = await axios.post("http://localhost:5000/api/login", {
+        email,
+        password,
+      });
+
+    alert("เข้าสู่ระบบสำเร็จ ✅");
+    localStorage.setItem("token", res.data.token);
+    navigate("/dashboard");
+  } catch (err: any) {
+    setError(err.response?.data?.message || "⚠️ อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+    setShake(true);
+  }
+
+  setTimeout(() => setShake(false), 500);
 };
 
   return (                                                                                           // พืนหลัง
@@ -100,7 +123,7 @@ const LoginForm: React.FC = () => {
         <h2 className="text-3xl font-semibold text-center text-red-800 mb-10">MoiveX</h2>
 
         {/* ฟอร์ม */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleLogin} className="space-y-6">
 
           {/* อีเมล */}
           <div className="relative">
@@ -170,11 +193,11 @@ const LoginForm: React.FC = () => {
             type="button"
             onClick={goToRegister}
             className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105"> Register
-            </motion.button>
-          </p>
-      </motion.div>
-    </div>
-  );
- };
+                </motion.button>
+              </p>
+          </motion.div>
+        </div>
+      );
+    };
 
 export default LoginForm;
