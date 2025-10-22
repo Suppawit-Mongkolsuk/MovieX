@@ -2,6 +2,7 @@ import React, { useState, useEffect} from "react";
 import { Mail, Lock, Phone } from "lucide-react";
 import { motion , AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const RegisterForm: React.FC = () => {
 
@@ -45,32 +46,81 @@ const RegisterForm: React.FC = () => {
     return () => clearInterval(interval);
   }, []); 
 
-  // ตรวจสอบข้อมูลก่อนสมัคร
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleRegister = async (e: React.FormEvent) => {
+  e.preventDefault();
 
+  // ขั้นตอนที่ 1: ตรวจสอบความถูกต้องของข้อมูล
     if (!phone.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       setError("⚠️ กรุณากรอกข้อมูลให้ครบทุกช่อง");
-      setShake(true);
-    } else if (password !== confirmPassword) {
+      setShake(false);
+      setTimeout(() => setShake(true), 100);
+      return;
+    }
+    //ตรวจสอบรหัสผ่าน
+    if (password !== confirmPassword) {
       setError("⚠️ รหัสผ่านไม่ตรงกัน");
-      setShake(true);
-    } else if (!/^\d+$/.test(phone)) {
+      setShake(false);
+      setTimeout(() => setShake(true), 0);
+      return;
+    }
+    //ตรวจสอบอีเมล
+    const thaiRegex = /[ก-๙]/;
+    const validEmailChars = /^[A-Za-z0-9@._-]+$/; 
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+
+    if (thaiRegex.test(email)) {
+    setError("⚠️ ห้ามกรอกอักษรภาษาไทยในอีเมล");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+    }
+    if (!validEmailChars.test(email)) {
+    setError("⚠️ กรุณากรอกเฉพาะอักษรภาษาอังกฤษ ตัวเลข หรือเครื่องหมายที่ใช้ในอีเมลเท่านั้น");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+    }
+    if (!emailPattern.test(email)) {
+    setError("⚠️ กรุณากรอกอีเมลให้ครบ เช่น example@gmail.com");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+    }
+    //ตรวจสอบเบอร์โทร
+    if (!/^\d+$/.test(phone)) {
       setError("⚠️ กรุณากรอกเบอร์โทรศัพท์เฉพาะตัวเลขเท่านั้น");
-      setShake(true);
-    } else if (phone.length < 10) {
+      setShake(false);
+      setTimeout(() => setShake(true), 0);
+      return;
+    }
+    if (phone.length < 10) {
       setError("⚠️ เบอร์โทรศัพท์ต้องมีอย่างน้อย 10 หลัก");
-      setShake(true);
-    } else if (!/^(09|08|06)\d{8}$/.test(phone)) {
+      setShake(false);
+      setTimeout(() => setShake(true), 0);
+      return;
+    }
+    if (!/^(09|08|06)\d{8}$/.test(phone)) {
       setError("⚠️ เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 09, 08 หรือ 06");
-      setShake(true);
-    } else {
-      setError("");
-      alert(`สมัครสมาชิกสำเร็จ! 🎉\nเบอร์โทร: ${phone}\nอีเมล: ${email}`);
+      setShake(false);
+      setTimeout(() => setShake(true), 0);
+      return;
     }
 
-    setTimeout(() => setShake(false), 500);
-  };
+  setError("");
+  try {
+    const res = await axios.post("http://localhost:5000/api/register", {
+      phone,
+      email,
+      password,
+    });
+    alert(res.data.message);
+    navigate("/"); // กลับไปหน้า Login หลังสมัครเสร็จ
+  } catch (err: any) {
+    setError(err.response?.data?.message || "สมัครไม่สำเร็จ");
+  }
+
+  setTimeout(() => setShake(false), 500);
+};
 
   return (                                                                                              // พืนหลัง
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden"> 
@@ -94,13 +144,14 @@ const RegisterForm: React.FC = () => {
 
       {/* กล่องสมัครสมาชิก */}
       <motion.div
+        key={error}
         className="bg-white/10 backdrop-blur-xl border border-white/40 p-8 rounded-3xl shadow-lg w-full max-w-md"
         animate={shake ? { x: [-8, 8, -6, 6, -4, 4, 0] } : { x: 0 }}
         transition={{ duration: 0.4 }}>
         <h2 className="text-3xl font-semibold text-center text-red-800 mb-10">Create Account</h2>
 
      {/* ฟอร์ม */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleRegister} className="space-y-6">
         
           {/* เบอร์โทรศัพท์ */}
           <div className="relative">
@@ -121,7 +172,7 @@ const RegisterForm: React.FC = () => {
           <div className="relative">
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={18} />
             <input
-              type="email"
+              type="text"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -177,7 +228,7 @@ const RegisterForm: React.FC = () => {
           >
             Register
           </button>
-        </form>
+       </form>
 
         {/* ลิงก์กลับไปหน้า login */}
         <p className="mt-4 text-center text-sm text-gray-400">
