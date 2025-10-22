@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Mail } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -43,40 +44,49 @@ const ForgotPasswordForm: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const englishRegex = /^[A-Za-z0-9@._-]+$/;
     const thaiRegex = /[ก-๙]/;
 
-    if (!email.trim()) {
-      setError("⚠️ กรุณากรอกอีเมลของคุณ");
-      setShake(true);
-      setSuccess("");
-    } else if (thaiRegex.test(email)) {
-      setError("⚠️ ห้ามกรอกอักษรภาษาไทย");
-      setShake(true);
-      setSuccess("");
-    } else if (!englishRegex.test(email)) {
-      setError("⚠️ กรุณากรอกเฉพาะอักษรภาษาอังกฤษ ตัวเลข หรือเครื่องหมายที่ใช้ในอีเมลเท่านั้น");
-      setShake(true);
-      setSuccess("");
-    } else if (!email.includes("@") || !email.includes(".")) {
-      setError("⚠️ กรุณากรอกอีเมลให้ครบ เช่น example@gmail.com");
-      setShake(true);
-      setSuccess("");
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("⚠️ กรุณากรอกอีเมลให้ถูกต้อง");
-      setShake(true);
-      setSuccess("");
-    } else {
-      setError("");
-      setSuccess("✅ ระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว");
+  if (!email.trim()) {
+    setError("⚠️ กรุณากรอกอีเมลของคุณ");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+  } else if (thaiRegex.test(email)) {
+    setError("⚠️ ห้ามกรอกอักษรภาษาไทย");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+  } else if (!englishRegex.test(email)) {
+    setError("⚠️ กรุณากรอกเฉพาะอักษรภาษาอังกฤษ ตัวเลข หรือเครื่องหมายที่ใช้ในอีเมลเท่านั้น");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+  } else if (!email.includes("@") || !email.includes(".")) {
+    setError("⚠️ กรุณากรอกอีเมลให้ครบ เช่น example@gmail.com");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+  } else if (!/\S+@\S+\.\S+/.test(email)) {
+    setError("⚠️ กรุณากรอกอีเมลให้ถูกต้อง");
+    setShake(false);
+    setTimeout(() => setShake(true), 0);
+    return;
+  }
 
-      // เพิ่มเอฟเฟกต์แอนิเมชันตอนสำเร็จ
-      setSuccessEffect(true);
-      setTimeout(() => setSuccessEffect(false), 1200);
-    }
+  setError("");
+  try {
+    const res = await axios.post("http://localhost:5000/api/forgot-password", { email });
+    setSuccess(`✅ ${res.data.message}`);
+    setSuccessEffect(true);
+    setTimeout(() => setSuccessEffect(false), 1200);
+  } catch (err: any) {
+    setError(err.response?.data?.message || "กรุณาลองใหม่อีกครั้ง");
+    setShake(true);
+  }
 
     setTimeout(() => setShake(false), 500);
   };

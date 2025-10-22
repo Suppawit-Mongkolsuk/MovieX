@@ -58,4 +58,21 @@ app.post("/api/login", async (req, res) => {
   res.json({ message: "เข้าสู่ระบบสำเร็จ ✅", user: { email } });
 });
 
-app.listen(5000, () => console.log("🚀 Server running on http://localhost:5000"));
+// Forgot Password (ย้ายออกมาไว้นอก login)
+app.post("/api/forgot-password", (req, res) => {
+  const { email } = req.body;
+
+  const users = readUsers();
+  const user = users.find((u) => u.email === email);
+
+  if (!user) {
+    return res.status(404).json({ message: "ไม่พบบัญชีอีเมลนี้ในระบบ" });
+  }
+
+  // จำลองการส่งอีเมล (จริง ๆ แค่ตอบกลับ)
+  res.json({ message: `ลิงก์รีเซ็ตรหัสผ่านถูกส่งไปที่ ${email} แล้ว` });
+});
+
+app.listen(5000, () =>
+  console.log("🚀 Server running on http://localhost:5000")
+);
