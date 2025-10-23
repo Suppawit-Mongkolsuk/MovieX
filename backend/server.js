@@ -26,17 +26,18 @@ const writeUsers = (users) => {
 
 // Register
 app.post("/api/register", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, role } = req.body;
+
   if (!email || !password)
     return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบ" });
 
   const users = readUsers();
-  const existing = users.find((u) => u.email === email);
+  const existing = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
   if (existing)
     return res.status(400).json({ message: "อีเมลนี้ถูกใช้แล้ว" });
 
   const hashed = await bcrypt.hash(password, 10);
-  users.push({ email, password: hashed });
+  users.push({ email, password: hashed, role: role || "user" }); // 👈 default = user
   writeUsers(users);
 
   res.json({ message: "สมัครสมาชิกสำเร็จ!" });
@@ -47,7 +48,7 @@ app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   const users = readUsers();
 
-  const user = users.find((u) => u.email === email);
+  const user = users.find((u) => u.email.toLowerCase() === email.toLowerCase());
   if (!user)
     return res.status(400).json({ message: "ไม่พบบัญชีนี้" });
 
@@ -55,7 +56,10 @@ app.post("/api/login", async (req, res) => {
   if (!match)
     return res.status(400).json({ message: "รหัสผ่านไม่ถูกต้อง" });
 
-  res.json({ message: "เข้าสู่ระบบสำเร็จ ✅", user: { email } });
+  res.json({ 
+    message: "เข้าสู่ระบบสำเร็จ ✅", 
+    user: { email: user.email, role: user.role }
+  });
 });
 
 // Forgot Password (ย้ายออกมาไว้นอก login)

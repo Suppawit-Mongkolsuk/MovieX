@@ -83,16 +83,27 @@ const LoginForm: React.FC = () => {
         password,
       });
 
-    alert("เข้าสู่ระบบสำเร็จ ✅");
-    localStorage.setItem("token", res.data.token);
-    navigate("/dashboard");
-  } catch (err: any) {
-    setError(err.response?.data?.message || "⚠️ อีเมลหรือรหัสผ่านไม่ถูกต้อง");
-    setShake(true);
-  }
+        const { email: userEmail, role } = res.data.user;
 
-  setTimeout(() => setShake(false), 500);
-};
+      // เก็บข้อมูลใน localStorage (เพิ่ม role ตรงนี้)
+      localStorage.setItem("userEmail", userEmail);
+      localStorage.setItem("userRole", role);
+
+      alert(`เข้าสู่ระบบสำเร็จ ✅ (สิทธิ์: ${role})`);
+
+      // นำทางตามสิทธิ์ของผู้ใช้
+      if (role === "staff") {
+        navigate("/staff-dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "⚠️ อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+      setShake(true);
+    }
+
+    setTimeout(() => setShake(false), 500);
+  };
 
   return (                                                                                           // พืนหลัง
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
