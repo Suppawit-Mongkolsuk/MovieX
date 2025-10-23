@@ -30,7 +30,7 @@ const Card: React.FC<CardProps> = ({
       "
     >
       {/* Movie Poster */}
-      <div className="w-full h-[300] overflow-hidden rounded-2xl shadow-lg shadow-black/40">
+      <div className="w-full h-max-[300px] overflow-hidden rounded-2xl shadow-lg shadow-black/40">
         <img src={imageUrl} alt={title} className="object-cover" />
       </div>
 

@@ -25,9 +25,8 @@ function Movies() {
         {movies
           .filter((m) => m.status === 'Now Showing')
           .map((movie) => (
-            <Link to={`/moviedetail/${movie.id}`} key={movie.id}>
+            <Link to={`/moviedetail/${movie.movieID}`} key={movie.id}>
               <Card
-                key={movie.id}
                 title={movie.title}
                 imageUrl={movie.poster}
                 date={movie.date}

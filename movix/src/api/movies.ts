@@ -1,20 +1,51 @@
-// 📦 นำเข้า axios library สำหรับเรียก API (GET, POST, DELETE ฯลฯ)
-import axios from "axios"
+import type { Movie } from './typeMovie'
 
-// 🏗️ สร้าง instance ของ axios พร้อมตั้ง baseURL ไว้
-// เพื่อไม่ต้องพิมพ์ URL เต็ม ๆ ทุกครั้งที่เรียก API
-export const api = axios.create({
-  baseURL: 'https://68f0fcef0b966ad50034f883.mockapi.io', // 🔗 Base URL จาก MockAPI.io ห้ามเเก้ไข*******
-})
+// 🔹 URL ของ MockAPI
+const API_URL = 'https://68f0fcef0b966ad50034f883.mockapi.io/movies'
 
-// 🎬 ฟังก์ชันดึงข้อมูลหนังทั้งหมดจาก endpoint /movies
-export const getMovies = async () => {
-  // 📥 เรียก API แบบ GET ไปที่ https://.../movies
-  const res = await api.get('/movies')
+// 🔹 ฟังก์ชันหลัก: ดึงหนังทั้งหมด + อัปเดตสถานะอัตโนมัติ
+export async function getMovies(): Promise<Movie[]> {
+  try {
+    const res = await fetch(API_URL)
+    console.log('📡 Fetching from:', API_URL)
+    const movies: Movie[] = await res.json()
 
-  // ✅ คืนค่าข้อมูลที่อยู่ใน res.data (เฉพาะ array ของหนัง)
-  return res.data
+    // ✅ แปลง id ให้เป็น string เพื่อกันปัญหา PUT 404
+    const normalMovies = movies.map((m) => ({
+      ...m,
+      id: String(m.id),
+    }))
+
+    // 🔹 วันที่ปัจจุบัน 
+    const today = new Date()
+
+    // 🔹 วนลูปหนังทั้งหมดเพื่อเช็กสถานะ
+    for (const m of normalMovies) {
+      const start = new Date(m.date)
+      const end = new Date(m.endDate)
+
+      let newStatus = m.status
+
+      // 🔹 เช็กสถานะตามวัน
+      if (today < start) newStatus = 'Coming Soon'
+      else if (today >= start && today <= end) newStatus = 'Now Showing'
+      else newStatus = 'Ended'
+
+      // 🔹 ถ้าสถานะเปลี่ยน → PUT กลับไปอัปเดตใน MockAPI
+      if (newStatus !== m.status) {
+        await fetch(`${API_URL}/${m.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...m, status: newStatus }),
+        })
+        console.log(`✅ Updated ${m.title} → ${newStatus}`)
+      }
+    }
+
+    // 🔹 ส่งข้อมูลกลับไปให้หน้า Home ใช้ต่อ
+    return normalMovies
+  } catch (error) {
+    console.error('❌ Error fetching movies:', error)
+    return []
+  }
 }
-
-
-

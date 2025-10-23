@@ -11,10 +11,18 @@ function Home() {
 
   useEffect(() => {
     const loadMovies = async () => {
-      const data = await getMovies(); // ✅ เรียก API จาก MockAPI
-      setGetMovies(data); // ✅ เก็บข้อมูลใน state
+      const data = await getMovies(); // ✅ ดึงข้อมูลจาก MockAPI
+      setGetMovies(data); // ✅ อัปเดต state
+      console.log('🎬 Movies auto-updated at', new Date().toLocaleTimeString());
     };
-    loadMovies(); // ✅ เรียกฟังก์ชันตอนหน้าโหลด
+
+    loadMovies(); // ✅ โหลดครั้งแรกตอนหน้าเปิด
+
+    // ตั้งเวลาให้โหลดข้อมูลใหม่ทุก 20 วินาที
+    const interval = setInterval(loadMovies, 20000);
+
+    // เคลียร์ interval ถ้าเปลี่ยนหน้า
+    return () => clearInterval(interval);
   }, []);
   return (
     <div className="pt-16">
@@ -27,10 +35,9 @@ function Home() {
         {movies
           .filter((m) => m.status === 'Now Showing')
           .map((movie) => (
-            <Link to={`/moviedetail/${movie.id}`} key={movie.id}>
+            <Link to={`/moviedetail/${movie.movieID}`} key={movie.id}>
               {/*เพิ่ม Link หนังตามid*/}
               <Card
-                key={movie.id}
                 title={movie.title}
                 imageUrl={movie.poster}
                 date={movie.date}
@@ -47,9 +54,8 @@ function Home() {
         {movies
           .filter((m) => m.status === 'Coming Soon')
           .map((movie) => (
-            <Link to={`/moviedetail/${movie.id}`} key={movie.id}>
+            <Link to={`/moviedetail/${movie.movieID}`} key={movie.id}>
               <Card
-                key={movie.id}
                 title={movie.title}
                 imageUrl={movie.poster}
                 date={movie.date}

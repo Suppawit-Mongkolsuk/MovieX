@@ -17,7 +17,7 @@ export default function MovieDetail() {
     loadMovies();
   }, []);
 
-  const movie = movies.find((m) => m.id.toString() === id);
+  const movie = movies.find((m) => m.movieID.toString() === id);
 
   if (!movie) {
     return (
@@ -41,7 +41,7 @@ export default function MovieDetail() {
               alt={movie.title}
               className="rounded-2xl shadow-xl shadow-black/40 w-full h-auto transition-all duration-500 ease-in-out object-cover"
             />
-            <p className="hidden md:block text-white/80 font-semibold mt-4 text-center text-xl lg:text-2xl">
+            <p className="text-white/80 font-semibold mt-4 text-center text-xl lg:text-2xl">
               {movie.title}
             </p>
           </div>
