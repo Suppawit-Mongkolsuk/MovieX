@@ -47,49 +47,53 @@ const ForgotPasswordForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const englishRegex = /^[A-Za-z0-9@._-]+$/;
-    const thaiRegex = /[ก-๙]/;
-
+    // ✅ ตรวจสอบว่าใส่อีเมลหรือยัง
     if (!email.trim()) {
       setError('⚠️ กรุณากรอกอีเมลของคุณ');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    } else if (thaiRegex.test(email)) {
-      setError('⚠️ ห้ามกรอกอักษรภาษาไทย');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    } else if (!englishRegex.test(email)) {
-      setError(
-        '⚠️ กรุณากรอกเฉพาะอักษรภาษาอังกฤษ ตัวเลข หรือเครื่องหมายที่ใช้ในอีเมลเท่านั้น'
-      );
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    } else if (!email.includes('@') || !email.includes('.')) {
-      setError('⚠️ กรุณากรอกอีเมลให้ครบ เช่น example@gmail.com');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      setError('⚠️ กรุณากรอกอีเมลให้ถูกต้อง');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
+      setShake(true);
       return;
     }
 
-    setError('');
     try {
-      const res = await axios.post(
-        'http://localhost:5000/api/forgot-password',
-        { email }
+      // ✅ 1. ดึงข้อมูลทั้งหมดจาก MockAPI (เช็คว่าอีเมลนี้มีอยู่ไหม)
+      const res = await axios.get(
+        'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
       );
-      setSuccess(`✅ ${res.data.message}`);
-      setSuccessEffect(true);
-      setTimeout(() => setSuccessEffect(false), 1200);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'กรุณาลองใหม่อีกครั้ง');
+      const users = res.data;
+
+      // ✅ 2. หาผู้ใช้ที่อีเมลตรงกับที่กรอก
+      const foundUser = users.find((u: any) => u.gmail === email);
+
+      if (foundUser) {
+        // ✅ 3. ถ้าพบอีเมล ให้ถามรหัสผ่านใหม่
+        const newPassword = prompt('กรุณากรอกรหัสผ่านใหม่:');
+        if (!newPassword) {
+          alert('❌ กรุณากรอกรหัสผ่านใหม่ให้เรียบร้อย');
+          return;
+        }
+
+        // ✅ 4. อัปเดตรหัสผ่านใหม่ใน MockAPI ด้วย PUT
+        await axios.put(
+          `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${foundUser.id}`,
+          { pass: newPassword }
+        );
+
+        // ✅ 5. แจ้งผลและกลับไปหน้า Login
+        setSuccess('✅ เปลี่ยนรหัสผ่านเรียบร้อยแล้ว!');
+        setError('');
+        setSuccessEffect(true);
+        setTimeout(() => {
+          setSuccessEffect(false);
+          navigate('/login');
+        }, 1500);
+      } else {
+        // ❌ ถ้าไม่พบอีเมล
+        setError('❌ ไม่พบอีเมลนี้ในระบบ');
+        setShake(true);
+      }
+    } catch (err) {
+      console.error(err);
+      setError('⚠️ ไม่สามารถเชื่อมต่อ MockAPI ได้');
       setShake(true);
     }
 

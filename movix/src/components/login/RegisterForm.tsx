@@ -114,12 +114,14 @@ const RegisterForm: React.FC = () => {
 
     setError('');
     try {
-      const res = await axios.post('http://localhost:5000/api/register', {
+      // ✅ ส่งข้อมูลผู้ใช้ใหม่ไป MockAPI แทนการส่งไป backend จริง
+      await axios.post('https://68f0fcef0b966ad50034f883.mockapi.io/Login', {
         phone,
-        email,
-        password,
+        gmail: email,
+        pass: password,
+        role: 'user', // 🔒 กำหนด role เองให้เป็น user เสมอ
       });
-      alert(res.data.message);
+      alert('สมัครสมาชิกสำเร็จ!');
       navigate('/login'); // กลับไปหน้า Login หลังสมัครเสร็จ
     } catch (err: any) {
       setError(err.response?.data?.message || 'สมัครไม่สำเร็จ');

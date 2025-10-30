@@ -50,53 +50,44 @@ const LoginForm: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setError('');
     setShake(false);
 
-    if (!email.trim() && !password.trim()) {
-      setError('⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบก่อนเข้าสู่ระบบ');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    }
-
-    if (!email.trim()) {
-      setError('⚠️ กรุณากรอกอีเมลก่อนเข้าสู่ระบบ');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
-      return;
-    }
-
-    if (!password.trim()) {
-      setError('⚠️ กรุณากรอกรหัสผ่านก่อนเข้าสู่ระบบ');
-      setShake(false);
-      setTimeout(() => setShake(true), 0);
+    if (!email.trim() || !password.trim()) {
+      setError('⚠️ กรุณากรอกอีเมลและรหัสผ่านให้ครบ');
+      setShake(true);
       return;
     }
 
     try {
-      const res = await axios.post('http://localhost:5000/api/login', {
-        email,
-        password,
-      });
+      // ดึงข้อมูลผู้ใช้จาก MockAPI
+      const res = await axios.get(
+        'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
+      );
+      const users = res.data;
 
-      const { email: userEmail, role } = res.data.user;
+      // ค้นหาผู้ใช้ที่อีเมลและรหัสผ่านตรงกัน
+      const foundUser = users.find(
+        (u: any) => u.gmail === email && u.pass === password
+      );
 
-      // เก็บข้อมูลใน localStorage (เพิ่ม role ตรงนี้)
-      localStorage.setItem('userEmail', userEmail);
-      localStorage.setItem('userRole', role);
+      if (foundUser) {
+        const userRole = foundUser.role || 'user'; // ถ้าไม่มี role ให้ default เป็น user
+        alert(`เข้าสู่ระบบสำเร็จ ✅ (สิทธิ์: ${userRole})`);
 
-      alert(`เข้าสู่ระบบสำเร็จ ✅ (สิทธิ์: ${role})`);
-
-      // นำทางตามสิทธิ์ของผู้ใช้
-      if (role === 'staff') {
-        navigate('/staff-dashboard');
+        // นำทางตามสิทธิ์
+        if (userRole === 'Admin') {
+          navigate('/');
+        } else {
+          navigate('/');
+        }
       } else {
-        navigate('/dashboard');
+        setError('⚠️ อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+        setShake(true);
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || '⚠️ อีเมลหรือรหัสผ่านไม่ถูกต้อง');
+    } catch (err) {
+      console.error(err);
+      setError('⚠️ ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้');
       setShake(true);
     }
 
@@ -132,7 +123,7 @@ const LoginForm: React.FC = () => {
         transition={{ duration: 0.4 }}
       >
         <h2 className="text-3xl font-semibold text-center text-red-800 mb-10">
-          MoiveX
+          MovieX
         </h2>
 
         {/* ฟอร์ม */}

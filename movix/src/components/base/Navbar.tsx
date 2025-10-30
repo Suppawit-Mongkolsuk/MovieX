@@ -4,7 +4,7 @@ import { RiMovie2AiLine } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdMenu } from 'react-icons/io';
 import Responsive from './responsive_navbar';
-import { Link } from 'react-router-dom';
+import UserMenu from './user_manu';
 
 function Navbar() {
   const [open, setopen] = React.useState(false);
@@ -42,18 +42,7 @@ function Navbar() {
               className="pl-10 pr-4 py-1.5 rounded-full border border-[#d4af37]/60 bg-black/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af37] w-48 lg:w-60 transition-all duration-200 "
             />
             {/* Profile Icon */}
-
-            <Link
-              to="/login"
-              className="ml-5 w-10 h-10 rounded-full border border-[#d4af37]/60 bg-white/10 flex items-center justify-center"
-              aria-label="Profile"
-            >
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-                alt="Profile"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </Link>
+            <UserMenu />
           </div>
 
           {/* ปุ่มกด Mobile */}
