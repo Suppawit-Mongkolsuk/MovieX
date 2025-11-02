@@ -72,6 +72,13 @@ const LoginForm: React.FC = () => {
       );
 
       if (foundUser) {
+        await axios.put(
+          `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${foundUser.id}`,
+          {
+            ...foundUser, // ต้องส่งข้อมูลทั้งหมดกลับไปด้วย
+            isLogin: true,
+          }
+        );
         const userRole = foundUser.role || 'user'; // ถ้าไม่มี role ให้ default เป็น user
         alert(`เข้าสู่ระบบสำเร็จ ✅ (สิทธิ์: ${userRole})`);
 

@@ -42,7 +42,9 @@ function Navbar() {
               className="pl-10 pr-4 py-1.5 rounded-full border border-[#d4af37]/60 bg-black/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af37] w-48 lg:w-60 transition-all duration-200 "
             />
             {/* Profile Icon */}
-            <UserMenu />
+            <div className="ml-3">
+              <UserMenu />
+            </div>
           </div>
 
           {/* ปุ่มกด Mobile */}

@@ -114,7 +114,7 @@ const RegisterForm: React.FC = () => {
 
     setError('');
     try {
-      // ✅ ส่งข้อมูลผู้ใช้ใหม่ไป MockAPI แทนการส่งไป backend จริง
+      // ✅ ส่งข้อมูลผู้ใช้ใหม่ไป MockAPI
       await axios.post('https://68f0fcef0b966ad50034f883.mockapi.io/Login', {
         phone,
         gmail: email,

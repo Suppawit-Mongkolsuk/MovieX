@@ -1,42 +1,156 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as Dialog from '@radix-ui/react-dialog';
 
 export default function UserMenu() {
-  const [isopen, setisopen] = useState(false); // ควบคุมการแสดงผลเมนู
-  const [showModal, setshowModal] = useState(false); // ควบคุมการแสดงผล Modal
-  const [file, setfile] = useState<File | null>(null); // เก็บไฟล์ที่เลือก
-  const [isuser, setuser] = useState<any>(null); // เก็บข้อมูลผู้ใช้
-  const [uploading, setuploading] = useState(false); // สถานะการอัปโหลดไฟล์
+  const [user, setUser] = useState<any>(null); // เก็บข้อมูล user ปัจจุบัน
+  const [file, setFile] = useState<File | null>(null); // ไฟล์ที่เลือก
+  const [uploading, setUploading] = useState(false); // สถานะกำลังอัปโหลด
+  const [openDialog, setOpenDialog] = useState(false); // เปิด/ปิด modal
 
+  // 🚀 ดึงข้อมูล user จาก MockAPI
   useEffect(() => {
-    // ดึงข้อมูลผู้ใช้จาก API เมื่อคอมโพเนนต์ถูกโหลด
     const fetchUser = async () => {
       try {
         const res = await axios.get(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
-        setuser(res.data); // เก็บข้อมูลผู้ใช้ใน state
+        const loggedInUser = res.data.find((u: any) => u.isLogin === true);
+        setUser(loggedInUser || null);
       } catch (error) {
-        console.error('โหลดข้อมูลไม่สำเร็จ:', error);
+        console.error('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);
       }
     };
     fetchUser();
   }, []);
 
+  // ออกจากระบบ
+  const handleLogout = async () => {
+    if (!user) return;
+    await axios.put(
+      `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${user.id}`,
+      {
+        isLogin: false,
+      }
+    );
+    setUser(null);
+  };
+  // อัปโหลดรูปภาพ
+  const handleUpload = async () => {
+    if (!file || !user) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'movix_upload');
+
+      const uploadRes = await fetch(
+        'https://api.cloudinary.com/v1_1/da1kj73c0/image/upload',
+        { method: 'POST', body: formData }
+      );
+      const uploadData = await uploadRes.json();
+      const imageUrl = uploadData.secure_url;
+
+      await axios.put(
+        `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${user.id}`,
+        { avatar: imageUrl }
+      );
+
+      setUser({ ...user, avatar: imageUrl });
+      setOpenDialog(false);
+    } catch (error) {
+      console.error('อัปโหลดไม่สำเร็จ:', error);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div>
-      <Link
-        to="/login"
-        className="ml-5 w-10 h-10 rounded-full border border-[#d4af37]/60 bg-white/10 flex items-center justify-center"
-        aria-label="Profile"
-      >
-        <img
-          src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
-          alt="Profile"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </Link>
+      <DropdownMenu.Root>
+        {/* ปุ่มโปรไฟล์ */}
+        <DropdownMenu.Trigger asChild>
+          <img
+            src={
+              user?.avatar ||
+              'https://cdn-icons-png.flaticon.com/512/847/847969.png'
+            }
+            alt="profile"
+            className="w-10 h-10 rounded-full cursor-pointer border-2 border-white/50"
+          />
+        </DropdownMenu.Trigger>
+
+        <DropdownMenu.Portal>
+          <div>
+            <DropdownMenu.Content
+              className="mt-3 min-w-[200px] bg-black/90 text-white rounded-lg border border-movix-gold p-1 shadow-lg"
+              sideOffset={8}
+            >
+              {user ? (
+                <>
+                  {/* เปิด modal สำหรับอัปโหลดรูป */}
+                  <DropdownMenu.Item
+                    onSelect={() => setOpenDialog(true)}
+                    className="px-3 py-2 text-sm hover:bg-movix-gold/10 rounded-md cursor-pointer"
+                  >
+                    เพิ่มรูปโปรไฟล์
+                  </DropdownMenu.Item>
+
+                  <DropdownMenu.Item
+                    onSelect={handleLogout}
+                    className="px-3 py-2 text-sm text-red-400 hover:bg-red-600/20 rounded-md cursor-pointer"
+                  >
+                    ออกจากระบบ
+                  </DropdownMenu.Item>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  className="block text-center px-3 py-2 hover:bg-movix-gold/10 rounded-md"
+                >
+                  เข้าสู่ระบบ
+                </Link>
+              )}
+            </DropdownMenu.Content>
+          </div>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+
+      {/* 📦 Dialog ของ Radix (modal อัปโหลดรูป) */}
+      <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="bg-black/70 backdrop-blur-sm fixed inset-0" />
+          <Dialog.Content className="fixed top-1/2 left-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-neutral-900 p-6 rounded-xl border border-movix-gold text-white">
+            <Dialog.Title className="text-lg font-semibold text-center mb-4">
+              เพิ่มรูปโปรไฟล์
+            </Dialog.Title>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="block w-full text-sm text-gray-300 mb-4"
+            />
+
+            <div className="flex justify-center gap-3">
+              <Dialog.Close asChild>
+                <button className="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-700">
+                  ยกเลิก
+                </button>
+              </Dialog.Close>
+              <button
+                onClick={handleUpload}
+                disabled={!file || uploading}
+                className="px-4 py-2 bg-movix-gold text-black rounded-md hover:bg-yellow-400 disabled:opacity-50"
+              >
+                {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}
+              </button>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }
