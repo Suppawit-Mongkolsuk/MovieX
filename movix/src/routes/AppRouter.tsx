@@ -16,6 +16,7 @@ import Ticket from '../pages/user/Ticket';
 import ManageMovies from '../pages/admin/ManageMovie';
 import ManageShowtime from '../pages/admin/ManageShowtime';
 import ManageTheaters from '../pages/admin/ManageTheaters';
+import ManageHome from '../pages/admin/ManageHome';
 
 /*Login*/
 import LoginForm from '../components/login/LoginForm';
@@ -39,6 +40,7 @@ const AppRouter = () => {
         <Route path="/admin/movies" element={<ManageMovies />} />
         <Route path="/admin/showtimes" element={<ManageShowtime />} />
         <Route path="/admin/theaters" element={<ManageTheaters />} />
+        <Route path="/admin/Home" element={<ManageHome />} />
 
         {/* Login Route */}
         <Route path="/login" element={<LoginForm />} />

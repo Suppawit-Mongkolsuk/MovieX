@@ -1,13 +1,38 @@
-import React from 'react';
+import { useEffect, useState } from 'react'; // import useEffect, useState
 import { Navbarmenu } from '../../data/Navbar';
+import { NavbarmenuAdmin } from '../../data/Navbar';
 import { RiMovie2AiLine } from 'react-icons/ri';
 import { FaSearch } from 'react-icons/fa';
 import { IoMdMenu } from 'react-icons/io';
 import Responsive from './responsive_navbar';
 import UserMenu from './user_manu';
+import axios from 'axios';
 
 function Navbar() {
-  const [open, setopen] = React.useState(false);
+  // state สำหรับเปิด/ปิดเมนู mobile
+  const [open, setopen] = useState(false);
+  // state สำหรับเก็บ role ของ user ที่ล็อกอิน
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  // ดึงข้อมูล role ของ user จาก MockAPI
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get(
+          'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
+        );
+        // ตรวจ role ของ user ที่ล็อกอินอยู่
+        const loggedInUser = response.data.find(
+          (user: any) => user.isLogin === true
+        );
+        setUserRole(loggedInUser ? loggedInUser.role : null);
+      } catch (error) {
+        console.error('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);
+        setUserRole(null);
+      }
+    };
+    fetchUserRole();
+  }, []);
 
   return (
     <>
@@ -21,17 +46,20 @@ function Navbar() {
             <span className="tracking-wide">MOVIX</span>
           </div>
 
-          {/* Menu */}
+          {/* Menu: แสดงเมนูตาม role ของ user */}
           <div className="hidden md:flex items-center space-x-8  font-medium">
-            {Navbarmenu.map((item) => (
-              <a
-                key={item.id}
-                href={item.link}
-                className="text-white hover:text-gray-700 transition-colors duration-200"
-              >
-                {item.title}
-              </a>
-            ))}
+            {/* ถ้า userRole เป็น Admin ให้ใช้ NavbarmenuAdmin, ถ้าไม่ใช่หรือไม่มี role ให้ใช้ Navbarmenu */}
+            {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
+              (item) => (
+                <a
+                  key={item.id}
+                  href={item.link}
+                  className="text-white hover:text-gray-700 transition-colors duration-200"
+                >
+                  {item.title}
+                </a>
+              )
+            )}
           </div>
           {/* Search Bar */}
           <div className="hidden md:flex items-center relative lg:justify-end">

@@ -36,6 +36,8 @@ export default function UserMenu() {
       }
     );
     setUser(null);
+    // reload
+    window.location.reload();
   };
   // อัปโหลดรูปภาพ
   const handleUpload = async () => {
@@ -90,6 +92,7 @@ export default function UserMenu() {
             >
               {user ? (
                 <>
+                  <p className="px-3 py-2 text-sm">Role - {user.role}</p>
                   {/* เปิด modal สำหรับอัปโหลดรูป */}
                   <DropdownMenu.Item
                     onSelect={() => setOpenDialog(true)}
