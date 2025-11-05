@@ -62,7 +62,7 @@ function Navbar() {
             )}
           </div>
           {/* Search Bar */}
-          <div className="hidden md:flex items-center relative lg:justify-end">
+          <div className="hidden lg:flex items-center relative lg:justify-end">
             <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#d4af37] text-lg" />
             <input
               type="text"
@@ -76,8 +76,11 @@ function Navbar() {
           </div>
 
           {/* ปุ่มกด Mobile */}
-          <div className="md:hidden" onClick={() => setopen(!open)}>
-            <IoMdMenu className="text-3xl" />
+          <div className="lg:hidden flex gap-3">
+            <UserMenu />
+            <div className="md:hidden" onClick={() => setopen(!open)}>
+              <IoMdMenu className="text-3xl " />
+            </div>
           </div>
         </div>
       </nav>

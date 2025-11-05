@@ -59,7 +59,7 @@ export default function UserMenu() {
         `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${user.id}`,
         { avatar: imageUrl }
       );
-
+      // setรูปเลย
       setUser({ ...user, avatar: imageUrl });
       setOpenDialog(false);
     } catch (error) {
@@ -80,7 +80,8 @@ export default function UserMenu() {
               'https://cdn-icons-png.flaticon.com/512/847/847969.png'
             }
             alt="profile"
-            className="w-10 h-10 rounded-full cursor-pointer border-2 border-white/50"
+            className="w-8 h-8  md:w-10 md:h-10 rounded-full border-2 border-white/50 cursor-pointer"
+            onFocusCapture={(e) => e.stopPropagation()}
           />
         </DropdownMenu.Trigger>
 

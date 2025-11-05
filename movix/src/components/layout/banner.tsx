@@ -14,6 +14,7 @@ const Banner = () => {
       showStatus={false}
       showThumbs={false}
       showArrows={false}
+      showIndicators={false}
     >
       <div>
         <img src={postter} alt="" />
