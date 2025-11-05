@@ -1,12 +1,34 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Navbarmenu } from '../../data/Navbar';
-
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { NavbarmenuAdmin } from '../../data/Navbar';
 interface ResponsiveProps {
   open: boolean;
 }
 
 const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const Role = await axios.get(
+          'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
+        );
+        const loggedInUser = Role.data.find(
+          (user: any) => user.isLogin === true
+        );
+        setUserRole(loggedInUser ? loggedInUser.role : null);
+      } catch (error) {
+        console.log('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);
+        setUserRole(null);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
   return (
     <DropdownMenu.Root modal={false}>
       <AnimatePresence mode="wait">
@@ -19,15 +41,17 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
             className="fixed top-16 left-0 w-full h-screen z-20"
           >
             <div className="uppercase bg-black/50 py-10 m-4 rounded-3xl flex flex-col items-center gap-10 md:hidden">
-              {Navbarmenu.map((item) => (
-                <a
-                  key={item.id}
-                  href={item.link}
-                  className="text-white text-xl font-semibold"
-                >
-                  {item.title}
-                </a>
-              ))}
+              {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
+                (item) => (
+                  <a
+                    key={item.id}
+                    href={item.link}
+                    className="text-white text-xl font-semibold"
+                  >
+                    {item.title}
+                  </a>
+                )
+              )}
             </div>
           </motion.div>
         )}

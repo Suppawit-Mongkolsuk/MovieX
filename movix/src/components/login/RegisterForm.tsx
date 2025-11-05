@@ -247,7 +247,7 @@ const RegisterForm: React.FC = () => {
             type="submit"
             className="w-full py-2 font-semibold text-black bg-white rounded-2xl shadow-md
                        hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-400 hover:text-white
-                       hover:shadow-red-500/50 hover:-translate-y-1 transform transition-all duration-300"
+                      hover:shadow-red-500/50 hover:-translate-y-1 transform transition-all duration-300"
           >
             Register
           </button>
@@ -259,7 +259,7 @@ const RegisterForm: React.FC = () => {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105"
+            className="text-white-400  hover: transition-all duration-300 hover:scale-105 ml-3"
           >
             Login
           </button>

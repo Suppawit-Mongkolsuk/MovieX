@@ -170,7 +170,7 @@ const LoginForm: React.FC = () => {
             <button
               type="button"
               onClick={() => navigate('/forgot-password')}
-              className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105"
+              className="text-white-400  hover: transition-all duration-300 hover:scale-105"
             >
               Forgot Password?
             </button>
@@ -203,14 +203,14 @@ const LoginForm: React.FC = () => {
         </form>
 
         {/* ลิงก์สมัครสมาชิก */}
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-4 text-center text-sm text-black">
           Don't have an account?{' '}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="button"
             onClick={goToRegister}
-            className="text-blue-400 underline underline-offset-4 hover:text-blue-300 transition-all duration-300 hover:scale-105"
+            className="text-white-400 hover:transition-all duration-300 hover:scale-105 ml-3"
           >
             {' '}
             Register
