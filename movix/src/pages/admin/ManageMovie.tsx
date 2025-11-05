@@ -1,4 +1,11 @@
+import { NavbarAdmin } from '../../components/base/NavbarAdmin';
+
 const ManageMovie = () => {
-  return <h1>Manage Showtime Page</h1>;
+  return (
+    <div className="pt-16">
+      <NavbarAdmin />
+      <h1>ManageMovie</h1>
+    </div>
+  );
 };
 export default ManageMovie;

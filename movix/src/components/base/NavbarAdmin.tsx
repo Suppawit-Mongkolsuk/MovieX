@@ -1,33 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { RiMovie2AiLine } from 'react-icons/ri';
-import axios from 'axios';
 import { Admin } from '../../data/Navbar';
-import type { User } from '../../api/typeuser';
 import { IoMdMenu } from 'react-icons/io';
 import ResponsiveAdmin from './responsive_navbarAdmin';
 
 export function NavbarAdmin() {
   const [open, setopen] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      try {
-        const response = await axios.get(
-          'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
-        );
-        // ตรวจ role ของ user ที่ล็อกอินอยู่
-        const loggedInUser = (response.data as User[]).find(
-          (user) => user.isLogin === true
-        );
-        setUserRole(loggedInUser ? loggedInUser.role : null);
-      } catch (error) {
-        console.error('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);
-        setUserRole(null);
-      }
-    };
-    fetchUserRole();
-  }, []);
 
   return (
     <>
@@ -43,8 +21,7 @@ export function NavbarAdmin() {
 
           {/* Menu */}
           <div className="hidden md:flex items-center justify-center mx-auto space-x-8 font-medium">
-            {/* เช็ค role กันพลาด */}
-            {(userRole === 'Admin' ? Admin : []).map((item) => (
+            {Admin.map((item) => (
               <a
                 key={item.id}
                 href={item.link}

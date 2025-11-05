@@ -1,6 +1,11 @@
+import { NavbarAdmin } from '../../components/base/NavbarAdmin';
+
 const ManageShowtime = () => {
-    return (
-        <h1>Manage Showtime Page</h1>
-    )
-}
+  return (
+    <div className="pt-16">
+      <NavbarAdmin />
+      <h1>ManageShowtime</h1>
+    </div>
+  );
+};
 export default ManageShowtime;
