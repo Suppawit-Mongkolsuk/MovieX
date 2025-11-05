@@ -7,6 +7,7 @@ import { IoMdMenu } from 'react-icons/io';
 import Responsive from './responsive_navbar';
 import UserMenu from './user_manu';
 import axios from 'axios';
+import type { User } from '../../api/typeuser';
 
 function Navbar() {
   // state สำหรับเปิด/ปิดเมนู mobile
@@ -22,8 +23,8 @@ function Navbar() {
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
         // ตรวจ role ของ user ที่ล็อกอินอยู่
-        const loggedInUser = response.data.find(
-          (user: any) => user.isLogin === true
+        const loggedInUser = (response.data as User[]).find(
+          (user) => user.isLogin === true
         );
         setUserRole(loggedInUser ? loggedInUser.role : null);
       } catch (error) {

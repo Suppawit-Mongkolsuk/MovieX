@@ -1,7 +1,4 @@
 const ManageMovie = () => {
-    return (
-        <h1>Manage Movie Page</h1>
-    )
-}
-
+  return <h1>Manage Showtime Page</h1>;
+};
 export default ManageMovie;

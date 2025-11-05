@@ -1,15 +1,15 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Navbarmenu } from '../../data/Navbar';
+
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { NavbarmenuAdmin } from '../../data/Navbar';
+import { Admin } from '../../data/Navbar';
 import type { User } from '../../api/typeuser';
 interface ResponsiveProps {
   open: boolean;
 }
 
-const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
+const ResponsiveAdmin: React.FC<ResponsiveProps> = ({ open }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -42,17 +42,15 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
             className="fixed top-16 left-0 w-full h-screen z-20"
           >
             <div className="uppercase bg-black/50 py-10 m-4 rounded-3xl flex flex-col items-center gap-10 md:hidden">
-              {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
-                (item) => (
-                  <a
-                    key={item.id}
-                    href={item.link}
-                    className="text-white text-xl font-semibold"
-                  >
-                    {item.title}
-                  </a>
-                )
-              )}
+              {(userRole === 'Admin' ? Admin : []).map((item) => (
+                <a
+                  key={item.id}
+                  href={item.link}
+                  className="text-white text-xl font-semibold"
+                >
+                  {item.title}
+                </a>
+              ))}
             </div>
           </motion.div>
         )}
@@ -61,4 +59,4 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
   );
 };
 
-export default Responsive;
+export default ResponsiveAdmin;

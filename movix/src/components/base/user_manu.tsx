@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Dialog from '@radix-ui/react-dialog';
+import type { User } from '../../api/typeuser';
 
 export default function UserMenu() {
-  const [user, setUser] = useState<any>(null); // เก็บข้อมูล user ปัจจุบัน
+  const [user, setUser] = useState<User | null>(null); // เก็บข้อมูล user ปัจจุบัน
   const [file, setFile] = useState<File | null>(null); // ไฟล์ที่เลือก
   const [uploading, setUploading] = useState(false); // สถานะกำลังอัปโหลด
   const [openDialog, setOpenDialog] = useState(false); // เปิด/ปิด modal
@@ -17,7 +18,9 @@ export default function UserMenu() {
         const res = await axios.get(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
-        const loggedInUser = res.data.find((u: any) => u.isLogin === true);
+        const loggedInUser = (res.data as User[]).find(
+          (u) => u.isLogin === true
+        );
         setUser(loggedInUser || null);
       } catch (error) {
         console.error('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);

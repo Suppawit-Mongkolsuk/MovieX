@@ -1,5 +1,11 @@
+import { NavbarAdmin } from '../../components/base/NavbarAdmin';
+
 const ManageHome = () => {
-  return <h1>ManageHome Page</h1>;
+  return (
+    <div>
+      <NavbarAdmin />
+    </div>
+  );
 };
 
 export default ManageHome;

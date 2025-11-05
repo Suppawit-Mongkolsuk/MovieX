@@ -5,4 +5,6 @@ export type User = {
   pass: string;
   phone: string;
   role: string;
+  avatar: string;
+  isLogin: boolean;
 };
