@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 /*สร้าง link เชื่อมกันในเเต่ละหน้าของ project */
 /*CODE ตัวเต็มห้ามเเก้ไข*/
 
