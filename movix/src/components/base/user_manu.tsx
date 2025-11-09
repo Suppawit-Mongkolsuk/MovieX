@@ -129,7 +129,10 @@ export default function UserMenu() {
       <Dialog.Root open={openDialog} onOpenChange={setOpenDialog}>
         <Dialog.Portal>
           <Dialog.Overlay className="bg-black/70 backdrop-blur-sm fixed inset-0" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 w-[90%] max-w-sm -translate-x-1/2 -translate-y-1/2 bg-neutral-900 p-6 rounded-xl border border-movix-gold text-white">
+          <Dialog.Content
+            className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
+            w-[90%] max-w-sm bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl shadow-xl p-6"
+          >
             <Dialog.Title className="text-lg font-semibold text-center mb-4">
               เพิ่มรูปโปรไฟล์
             </Dialog.Title>
@@ -138,7 +141,7 @@ export default function UserMenu() {
               type="file"
               accept="image/*"
               onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="block w-full text-sm text-gray-300 mb-4"
+              className="block w-full text-sm text-gray-300 mb-4 bg-white/50 rounded-md"
             />
 
             <div className="flex justify-center gap-3">

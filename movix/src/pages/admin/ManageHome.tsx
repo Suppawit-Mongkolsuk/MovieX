@@ -77,6 +77,7 @@ const ManageHome = () => {
         user.name_user.toLowerCase().includes(lowerQuery) ||
         user.phone.toLowerCase().includes(lowerQuery)
     );
+
     setFilteredUsers(filtered);
   };
 
@@ -103,53 +104,67 @@ const ManageHome = () => {
     <div className="pt-16 min-h-screen">
       <NavbarAdmin />
 
-      {/* ตารางข้อมูลผู้ใช้  */}
-      <div className="mx-4 md:mx-12 mt-12">
-        <div className=" flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-bold ">📋 รายชื่อผู้ใช้ทั้งหมด</h1>
-          <SearchBar placeholder="ค้นหารายชื่อ..." onSearch={handleSearch} />
+      {/* ตารางข้อมูลผู้ใช้ */}
+      <div className="px-2 sm:px-4 md:px-12 mt-6 md:mt-12">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8">
+          <h1 className="text-lg text-center sm:text-xl md:text-2xl font-bold ">
+            📋 รายชื่อผู้ใช้ทั้งหมด
+          </h1>
+          <div className="w-full md:w-auto flex justify-center md:justify-end">
+            <SearchBar placeholder="ค้นหารายชื่อ..." onSearch={handleSearch} />
+          </div>
         </div>
-        <BaseTable
-          columns={[
-            'Avatar',
-            'ชื่อผู้ใช้',
-            'อีเมล',
-            'เบอร์โทร',
-            'Role',
-            'สถานะล็อกอิน',
-          ]}
-          data={filteredUsers}
-          renderRow={(user) => (
-            <tr
-              key={user.id}
-              className="border-t border-gray-700 hover:bg-white/5 transition"
-            >
-              <td className="p-5">
-                <img
-                  src={user.avatar}
-                  alt={user.name_user}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-              </td>
-              <td className="p-3">{user.name_user}</td>
-              <td className="p-3">{user.gmail}</td>
-              <td className="p-3">{user.phone}</td>
-              <td className="p-3">
-                <BaseSelectRole
-                  value={user.role}
-                  onChange={(newRole) => handleSelectRole(user, newRole)} // ✅ ใช้ popup
-                />
-              </td>
-              <td className="p-3">
-                {user.isLogin ? (
-                  <span className="text-green-500 font-semibold">ออนไลน์</span>
-                ) : (
-                  <span className="text-gray-400">ออฟไลน์</span>
-                )}
-              </td>
-            </tr>
-          )}
-        />
+
+        {/* ✅ ตาราง scroll แนวนอนในจอเล็ก */}
+        <div className="overflow-x-auto overflow-y-hidden rounded-lg shadow-md border border-white/10 backdrop-blur-sm">
+          <div className="min-w-[700px] sm:min-w-full">
+            <BaseTable
+              columns={[
+                'Avatar',
+                'ชื่อผู้ใช้',
+                'อีเมล',
+                'เบอร์โทร',
+                'Role',
+                'สถานะล็อกอิน',
+              ]}
+              data={filteredUsers}
+              renderRow={(user) => (
+                <tr
+                  key={user.id}
+                  className="border-t border-gray-700 hover:bg-white/5 transition text-[11px] sm:text-sm md:text-base text-left"
+                >
+                  <td className="p-2 sm:p-3 md:p-4 text-left">
+                    <img
+                      src={user.avatar}
+                      alt={user.name_user}
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+                    />
+                  </td>
+                  <td className="p-2 sm:p-3 text-left">{user.name_user}</td>
+                  <td className="p-2 sm:p-3 break-all text-left">
+                    {user.gmail}
+                  </td>
+                  <td className="p-2 sm:p-3 text-left">{user.phone}</td>
+                  <td className="p-2 sm:p-3 text-left">
+                    <BaseSelectRole
+                      value={user.role}
+                      onChange={(newRole) => handleSelectRole(user, newRole)}
+                    />
+                  </td>
+                  <td className="p-2 sm:p-3 text-left">
+                    {user.isLogin ? (
+                      <span className="text-green-500 font-semibold">
+                        ออนไลน์
+                      </span>
+                    ) : (
+                      <span className="text-gray-400">ออฟไลน์</span>
+                    )}
+                  </td>
+                </tr>
+              )}
+            />
+          </div>
+        </div>
       </div>
 
       {/* ✅ Popup ยืนยันการเปลี่ยน Role */}
