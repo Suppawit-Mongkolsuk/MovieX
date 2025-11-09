@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react'; // import useEffect, useState
 import { Navbarmenu } from '../../data/Navbar';
 import { NavbarmenuAdmin } from '../../data/Navbar';
 import { RiMovie2AiLine } from 'react-icons/ri';
-import { FaSearch } from 'react-icons/fa';
 import { IoMdMenu } from 'react-icons/io';
 import Responsive from './responsive_navbar';
 import UserMenu from './user_manu';
 import axios from 'axios';
 import type { User } from '../../api/typeuser';
+import { SearchBar } from './SearchBar';
 
 function Navbar() {
   // state สำหรับเปิด/ปิดเมนู mobile
@@ -63,17 +63,11 @@ function Navbar() {
             )}
           </div>
           {/* Search Bar */}
-          <div className="hidden lg:flex items-center relative lg:justify-end">
-            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[#d4af37] text-lg" />
-            <input
-              type="text"
-              placeholder="Search movies..."
-              className="pl-10 pr-4 py-1.5 rounded-full border border-[#d4af37]/60 bg-black/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#d4af37] w-48 lg:w-60 transition-all duration-200 "
-            />
+          <div className="hidden lg:flex items-center relative lg:justify-end space-x-3">
+            <SearchBar placeholder="ค้นหาหนัง..." />
+
             {/* Profile Icon */}
-            <div className="ml-3">
-              <UserMenu />
-            </div>
+            <UserMenu />
           </div>
 
           {/* ปุ่มกด Mobile */}
