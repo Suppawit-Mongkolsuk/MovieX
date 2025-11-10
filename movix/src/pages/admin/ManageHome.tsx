@@ -20,7 +20,7 @@ const ManageHome = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-  // ✅ state สำหรับ popup
+  // state สำหรับ popup
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingRole, setPendingRole] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -41,14 +41,14 @@ const ManageHome = () => {
     fetchUsers();
   }, []);
 
-  //  ฟังก์ชันเปิด popup ยืนยันการเปลี่ยน role
+  //  ฟังก์ชันเปิด popup
   const handleSelectRole = (user: User, newRole: string) => {
     setPendingRole(newRole);
     setSelectedUser(user);
     setConfirmOpen(true);
   };
 
-  // ✅ ฟังก์ชันยืนยันการเปลี่ยน role
+  // ยืนยันเปลี่ยน role
   const handleConfirm = async () => {
     if (!selectedUser) return;
     await handleRoleChange(selectedUser.id, pendingRole);
@@ -57,7 +57,7 @@ const ManageHome = () => {
     setPendingRole('');
   };
 
-  // ✅ ฟังก์ชันยกเลิก
+  // ยกเลิก
   const handleCancel = () => {
     setConfirmOpen(false);
     setSelectedUser(null);
@@ -115,7 +115,7 @@ const ManageHome = () => {
           </div>
         </div>
 
-        {/* ✅ ตาราง scroll แนวนอนในจอเล็ก */}
+        {/* ตาราง scroll  */}
         <div className="overflow-x-auto overflow-y-hidden rounded-lg shadow-md border border-white/10 backdrop-blur-sm">
           <div className="min-w-[700px] sm:min-w-full">
             <BaseTable
@@ -167,7 +167,7 @@ const ManageHome = () => {
         </div>
       </div>
 
-      {/* ✅ Popup ยืนยันการเปลี่ยน Role */}
+      {/* Popup ยืนยันการเปลี่ยน Role */}
       <ConfirmRoleDialog
         open={confirmOpen}
         onConfirm={handleConfirm}

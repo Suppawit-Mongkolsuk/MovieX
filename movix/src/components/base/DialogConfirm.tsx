@@ -1,5 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion } from 'framer-motion';
+import Button from './Button';
 
 interface ConfirmRoleDialogProps {
   open: boolean;
@@ -19,10 +20,9 @@ export const ConfirmRoleDialog = ({
   return (
     <Dialog.Root open={open}>
       <Dialog.Portal>
-        {/* ✅ Overlay แบบโปร่งแสงเบลอสวย */}
         <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40" />
 
-        {/* ✅ กล่อง popup */}
+        {/* กล่อง popup */}
         <Dialog.Content className="fixed inset-0 flex items-center justify-center z-50">
           <motion.div
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -49,18 +49,12 @@ export const ConfirmRoleDialog = ({
 
             {/* ปุ่มยืนยัน / ยกเลิก */}
             <div className="flex justify-end gap-3">
-              <button
-                onClick={onCancel}
-                className="px-4 py-2 rounded-lg bg-white/10 hover:bg-red-700 text-gray-200 transition"
-              >
+              <Button variant="danger" size="md" onClick={onCancel}>
                 ยกเลิก
-              </button>
-              <button
-                onClick={onConfirm}
-                className="px-4 py-2 rounded-lg bg-movix-gold text-black font-semibold hover:bg-green-500 transition"
-              >
+              </Button>
+              <Button variant="primary" size="md" onClick={onConfirm}>
                 ยืนยัน
-              </button>
+              </Button>
             </div>
           </motion.div>
         </Dialog.Content>

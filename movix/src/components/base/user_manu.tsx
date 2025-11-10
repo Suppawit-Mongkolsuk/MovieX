@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { User } from '../../api/typeuser';
+import Button from './Button';
 
 export default function UserMenu() {
   const [user, setUser] = useState<User | null>(null); // เก็บข้อมูล user ปัจจุบัน
@@ -64,6 +65,7 @@ export default function UserMenu() {
       );
       // setรูปเลย
       setUser({ ...user, avatar: imageUrl });
+      setFile(null);
       setOpenDialog(false);
     } catch (error) {
       console.error('อัปโหลดไม่สำเร็จ:', error);
@@ -146,17 +148,20 @@ export default function UserMenu() {
 
             <div className="flex justify-center gap-3">
               <Dialog.Close asChild>
-                <button className="px-4 py-2 bg-gray-600 rounded-md hover:bg-gray-700">
+                <Button variant="danger" size="md">
                   ยกเลิก
-                </button>
+                </Button>
               </Dialog.Close>
-              <button
+
+              <Button
                 onClick={handleUpload}
                 disabled={!file || uploading}
-                className="px-4 py-2 bg-movix-gold text-black rounded-md hover:bg-yellow-400 disabled:opacity-50"
+                variant="primary"
+                size="md"
+                className="disabled:opacity-50"
               >
                 {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}
-              </button>
+              </Button>
             </div>
           </Dialog.Content>
         </Dialog.Portal>
