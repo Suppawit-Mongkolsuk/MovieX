@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavbarAdmin } from '../../components/base/NavbarAdmin';
-import { SearchBar } from '../../components/base/SearchBar';
+import { SearchBar } from '../../components/layout/SearchBar';
 import { BaseSelectRole } from '../../components/layout/SelectRole';
 import { BaseTable } from '../../components/base/Table';
 import { ConfirmRoleDialog } from '../../components/layout/DialogConfirm';

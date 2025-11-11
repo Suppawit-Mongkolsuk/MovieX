@@ -1,131 +1,132 @@
 import { useState } from 'react';
+import type { ReactNode } from 'react';
 import Button from '../base/Button';
 import * as Dialog from '@radix-ui/react-dialog';
 
-interface UploadImageProps {
-  onUpload: (url: string) => void; // callback ฟังก์ชัน: ส่ง URL ของรูปกลับไปให้ component แม่ (เช่น AddMovieDialog หรือ Profile)
-  uploadPreset?: string; //  ใช้สำหรับตั้งค่า upload preset ของ Cloudinary (สามารถเปลี่ยนได้ในอนาคต)
-  label?: string; // ข้อความ label แสดงด้านบน เช่น "อัปโหลดโปสเตอร์หนัง" หรือ "เลือกรูปโปรไฟล์"
-}
+type UploadImageProps = {
+  onUpload: (url: string) => void; // ส่ง URL กลับไปให้ parent
+  uploadPreset?: string; // ชื่อ preset ของ Cloudinary
+  label?: string; // ข้อความ label
+  auto?: boolean; // เลือกแล้วอัปโหลดเองเลย? (default: true)
+  showActions?: boolean; // แสดงปุ่มในตัวคอมโพเนนต์ไหม? (default: false)
+  onCancel?: () => void; // callback ตอนกดยกเลิก (ถ้าใช้ปุ่มในตัว)
+  /** ให้ parent สร้างปุ่มเอง โดยเราจะส่ง api (upload/clear/uploading/hasFile/preview) ให้ */
+  renderActions?: (api: {
+    upload: () => void;
+    clear: () => void;
+    uploading: boolean;
+    hasFile: boolean;
+    preview: string | null;
+  }) => ReactNode;
+};
 
 export default function UploadImage({
   onUpload,
   uploadPreset = 'movix_upload',
   label = 'เลือกรูปภาพ',
+  auto = true,
+  showActions = false,
+  renderActions,
 }: UploadImageProps) {
-  //  เก็บไฟล์ที่ผู้ใช้เลือก
   const [file, setFile] = useState<File | null>(null);
-  // ใช้สำหรับโชว์สถานะระหว่างอัปโหลด
   const [uploading, setUploading] = useState(false);
-  // ใช้สำหรับแสดง preview ของรูปก่อนอัปโหลด
   const [preview, setPreview] = useState<string | null>(null);
 
-  // เมื่อผู้ใช้เลือกไฟล์จากเครื่อง (input type="file")
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0]; // ดึงไฟล์แรกที่เลือกมา
-    if (selectedFile) {
-      setFile(selectedFile); // เก็บไฟล์ไว้ใน state
-      setPreview(URL.createObjectURL(selectedFile)); // สร้าง preview URL ชั่วคราวไว้โชว์
+  // อัปโหลดขึ้น Cloudinary
+  const upload = async () => {
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      const res = await fetch(
+        'https://api.cloudinary.com/v1_1/da1kj73c0/image/upload',
+        { method: 'POST', body: formData }
+      );
+      const data = await res.json();
+      const url: string = data.secure_url;
+      onUpload(url); // ส่ง url กลับให้ parent
+    } catch (err) {
+      console.error('อัปโหลดไม่สำเร็จ:', err);
+      alert('อัปโหลดไม่สำเร็จ');
+    } finally {
+      setUploading(false);
     }
   };
 
-  // ☁️ ฟังก์ชันอัปโหลดรูปขึ้น Cloudinary
-  const handleUpload = async () => {
-    if (!file) return; // ถ้ายังไม่มีไฟล์ให้ return ออก
-    setUploading(true); // เริ่มอัปโหลด → เปลี่ยน state เป็น true เพื่อแสดงสถานะ loading
+  // ล้างไฟล์
+  const clear = () => {
+    setFile(null);
+    setPreview(null);
+  };
 
-    try {
-      // 🧾 เตรียมข้อมูลสำหรับส่งไป Cloudinary
-      const formData = new FormData();
-      formData.append('file', file); // แนบไฟล์จริง
-      formData.append('upload_preset', uploadPreset); // ใส่ preset ที่ตั้งไว้ใน Cloudinary Dashboard
+  // เมื่อเลือกไฟล์
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] || null;
+    setFile(f);
+    setPreview(f ? URL.createObjectURL(f) : null);
 
-      // 🚀 ส่งคำขอ POST ไปยัง Cloudinary API
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/da1kj73c0/image/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      // 📬 รับข้อมูลที่ตอบกลับมาเป็น JSON
-      const data = await res.json();
-      const imageUrl = data.secure_url; // URL จริงของรูปภาพหลังอัปโหลดเสร็จ
-
-      // 🔁 ส่ง URL กลับไปยัง component แม่ (เช่นให้ฟอร์ม AddMovie เอาไปใช้ใน movie.poster)
-      onUpload(imageUrl);
-
-      // 🧹 เคลียร์ค่าต่าง ๆ หลังอัปโหลดเสร็จ
-      setFile(null);
-      setPreview(null);
-    } catch (error) {
-      // ⚠️ ถ้ามีปัญหาให้โชว์ใน console + แจ้งเตือนผู้ใช้
-      console.error('อัปโหลดไม่สำเร็จ:', error);
-      alert('อัปโหลดรูปไม่สำเร็จ โปรดลองอีกครั้ง');
-    } finally {
-      // ✅ เปลี่ยนสถานะกลับเป็นปกติ
-      setUploading(false);
+    if (auto && f) {
+      // โหมดอัปโหลดอัตโนมัติ
+      await upload();
     }
   };
 
   return (
     <div className="flex flex-col items-center gap-3 text-white">
-      {/* 🏷️ แสดง label ของฟอร์ม (ถ้าไม่ได้ส่งมาก็จะใช้ค่าเริ่มต้น) */}
       <p className="text-sm opacity-70">{label}</p>
 
-      {/* 🖼️ ถ้ามี preview ให้โชว์ภาพที่ผู้ใช้เลือกไว้ */}
-      {preview && (
-        <div className="relative">
-          <img
-            src={preview}
-            alt="Preview"
-            className="w-40 h-60 object-cover rounded-md border border-gray-600"
-          />
-          {/*  ปุ่มเล็ก ๆ สำหรับลบรูปออกก่อนอัปโหลด */}
-          <button
-            onClick={() => {
-              setFile(null);
-              setPreview(null);
-            }}
-            className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600"
-          >
-            ✕
-          </button>
-        </div>
+      {preview ? (
+        <img
+          src={preview}
+          alt="preview"
+          className="w-40 h-60 object-cover rounded-md border border-gray-600"
+        />
+      ) : (
+        <p className="text-gray-400 italic text-sm">กรุณาเลือกรูปภาพ</p>
       )}
 
-      {/* 📁 ช่องเลือกไฟล์จากเครื่อง */}
+      {/* ปุ่มเลือกไฟล์ */}
+      <label
+        htmlFor="file-upload"
+        className="cursor-pointer bg-movix-gold text-black font-semibold px-6 py-2 rounded-lg hover:bg-yellow-400 transition-all "
+      >
+        เลือกไฟล์
+      </label>
       <input
+        id="file-upload"
         type="file"
         accept="image/*"
         onChange={handleFileChange}
-        className="block w-full text-sm text-gray-300
-        file:mr-4 file:py-2 file:px-4
-        file:rounded-md file:border-0
-        file:text-sm file:font-semibold
-        file:bg-movix-gold file:text-black
-        hover:file:bg-yellow-400"
+        className="hidden"
       />
 
-      {/* ☁️ ปุ่มกดอัปโหลด */}
-      <div className="flex gap-3 mt-5">
-        <Button
-          variant="primary"
-          size="md"
-          onClick={handleUpload}
-          disabled={!file || uploading} // ถ้าไม่มีไฟล์หรือกำลังอัปโหลดอยู่ → ปุ่มจะกดไม่ได้
-          className=" hover:bg-green-800 disabled:opacity-50"
-        >
-          {/* 🔄 เปลี่ยนข้อความบนปุ่มระหว่างอัปโหลด */}
-          {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}
-        </Button>
-        <Dialog.Close asChild>
-          <Button variant="danger" size="md">
-            ยกเลิก
-          </Button>
-        </Dialog.Close>
-      </div>
+      {/* 3 ทางเลือกสำหรับปุ่ม */}
+      {renderActions
+        ? renderActions({ upload, clear, uploading, hasFile: !!file, preview })
+        : showActions &&
+          !auto && (
+            <div className="flex gap-3 mt-2">
+              <Button
+                variant="primary"
+                size="md"
+                onClick={upload}
+                disabled={!file || uploading}
+              >
+                {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}
+              </Button>
+              <Button variant="secondary" size="md" onClick={clear}>
+                ล้างไฟล์
+              </Button>
+              <Dialog.Close asChild>
+                <Button variant="danger" size="md">
+                  ยกเลิก
+                </Button>
+              </Dialog.Close>
+            </div>
+          )}
     </div>
   );
 }

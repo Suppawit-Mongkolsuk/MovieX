@@ -7,7 +7,7 @@ import Responsive from './responsive_navbar';
 import UserMenu from './user_manu';
 import axios from 'axios';
 import type { User } from '../../api/typeuser';
-import { SearchBar } from './SearchBar';
+import { SearchBar } from '../layout/SearchBar';
 
 function Navbar() {
   // state สำหรับเปิด/ปิดเมนู mobile

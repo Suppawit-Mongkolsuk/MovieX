@@ -117,7 +117,12 @@ export default function UserMenu() {
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
             w-[90%] max-w-sm bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl shadow-xl p-6"
           >
-            <UploadImage onUpload={handleUploaded} />
+            <UploadImage
+              label="อัปโหลดรูปโปรไฟล์"
+              onUpload={handleUploaded}
+              auto={false}
+              showActions={true}
+            />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

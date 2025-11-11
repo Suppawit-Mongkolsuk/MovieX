@@ -1,10 +1,11 @@
 import { NavbarAdmin } from '../../components/base/NavbarAdmin';
+import AddMovieDialog from '../../components/layout/Addmoviex';
 
 const ManageMovie = () => {
   return (
     <div className="pt-16">
       <NavbarAdmin />
-      <h1>ManageMovie</h1>
+      <AddMovieDialog onAdded={() => console.log('Refresh movie list')} />
     </div>
   );
 };
