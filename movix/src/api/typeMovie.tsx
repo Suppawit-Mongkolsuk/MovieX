@@ -4,7 +4,7 @@ interface Movie {
   title: string;
   poster: string;
   trailer: string;
-  time: number;
+  time: string;
   date: string;
   endDate: string;
   genre: string;

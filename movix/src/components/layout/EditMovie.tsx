@@ -1,92 +1,72 @@
-import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import Button from '../base/Button';
 import UploadImage from '../base/UploadImage';
-import { toast } from 'react-toastify';
+import type { Movie } from '../../api/typeMovie';
 
-export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
-  const [open, setOpen] = useState(false); //สำหรับเปิดปิด ppopup
-  const [newMovie, setNewMovie] = useState({
-    title: '',
-    trailer: '',
-    genre: '',
-    time: '',
-    date: '',
-    endDate: '',
-    status: 'Coming Soon', // ปรับค่า default status ให้ตรงกับตอนเริ่มต้น
-    poster: '',
-  }); // เก็บค่าหนัง
+interface EditMovieProps {
+  movie: Movie;
+  onUpdated: () => void; // ฟังก์ชัน callback เวลาแก้ไขเสร็จ
+}
 
-  // 📤 ฟังก์ชันบันทึกหนังใหม่ลง MockAPI
+export default function EditMovie({ movie, onUpdated }: EditMovieProps) {
+  const [open, setOpen] = useState(false);
+  const [editedMovie, setEditedMovie] = useState(movie);
+
+  // บันทึกข้อมลู
   const handleSave = async () => {
     try {
-      console.log('🚀 เริ่มบันทึก:', newMovie);
-      // ตรวจสอบว่ากรอกข้อมูลครบไหม
+      console.log('🚀 เริ่มบันทึก:', editedMovie);
+      // ตรวจสอบว่ากรอกข้อมูลครบไหม(เอา4พอขก.พิม)
       if (
-        !newMovie.title ||
-        !newMovie.poster ||
-        !newMovie.trailer ||
-        newMovie.date ||
-        newMovie.endDate
+        !editedMovie.title ||
+        !editedMovie.trailer ||
+        !editedMovie.date ||
+        !editedMovie.endDate
       ) {
-        console.log('❌ ข้อมูลไม่ครบ:', newMovie);
+        console.log('❌ ข้อมูลไม่ครบ:', editedMovie);
         toast.error('กรุณากรอกข้อมูลให้ครบ');
         return;
       }
-
-      // เรียก axios.post() เพื่อส่งข้อมูลไป MockAPI
-      console.log('📤 เตรียมส่งข้อมูล:', newMovie);
-      await axios.post(
-        'https://68f0fcef0b966ad50034f883.mockapi.io/movies',
-        newMovie
+      await axios.put(
+        `https://68f0fcef0b966ad50034f883.mockapi.io/movies/${movie.id}`,
+        editedMovie
       );
-      toast.success('เพิ่มหนังใหม่สำเร็จ ✅');
-
-      // เคลียร์ค่า form หลังเพิ่มเสร็จ
-      setNewMovie({
-        title: '',
-        trailer: '',
-        genre: '',
-        time: '',
-        date: '',
-        endDate: '',
-        status: 'Coming Soon', // ปรับค่า default status ให้ตรงกับตอนเริ่มต้น
-        poster: '',
-      });
-
-      setOpen(false); // ปิด Dialog
-      onAdded(); // เรียก refresh ข้อมูลในตารางหลัก
+      onUpdated();
+      toast.success('แก้ไขข้อมูลหนังเรียบร้อยแล้ว');
+      setOpen(false);
     } catch (error) {
-      console.error('เพิ่มหนังไม่สำเร็จ:', error);
-      toast.error('เพิ่มหนังไม่สำเร็จ ❌');
+      toast.error('แก้ไขไม่สำเร็จ');
+      console.error(error);
     }
   };
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <Button variant="secondary" size="lg">
-          + Add Movie
+        <Button size="md" variant="secondary">
+          เเก้ไข
         </Button>
       </Dialog.Trigger>
-      <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+
       <Dialog.Portal>
+        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
         <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-2xl max-h-[90vh] overflow-y-auto bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl shadow-xl p-6 pb-8 space-y-4 focus:outline-none">
-          <Dialog.Title className="hidden md:block text-xl font-semibold text-center">
-            🎬 เพิ่มภาพยนตร์ใหม่
+          <Dialog.Title className="hidden md:block  text-xl font-bold text-center">
+            แก้ไขข้อมูลภาพยนตร์
           </Dialog.Title>
 
-          {/* ปรับ layout ฟอร์มจาก flex gap-4 เป็น flex flex-col md:flex-row gap-8 เพื่อรองรับ responsive */}
           <div className="flex flex-col md:flex-row gap-8">
             <div className="space-y-3 mr-4 md:mr-0 md:flex-1">
               {/* ชื่อเรื่อง */}
               <input
                 type="text"
                 placeholder="ชื่อภาพยนตร์"
-                value={newMovie.title}
+                value={editedMovie.title}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, title: e.target.value })
+                  setEditedMovie({ ...editedMovie, title: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-movix-gold"
               />
@@ -94,9 +74,9 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               <input
                 type="text"
                 placeholder="ลิ้งตัวอย่าง"
-                value={newMovie.trailer}
+                value={editedMovie.trailer}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, trailer: e.target.value })
+                  setEditedMovie({ ...editedMovie, trailer: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-movix-gold"
               />
@@ -104,9 +84,9 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               <input
                 type="text"
                 placeholder="หมวดหมู่ (เช่น Action)"
-                value={newMovie.genre}
+                value={editedMovie.genre}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, genre: e.target.value })
+                  setEditedMovie({ ...editedMovie, genre: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white"
               />
@@ -114,9 +94,9 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               <input
                 type="number"
                 placeholder="ระยะเวลา(นาที)"
-                value={newMovie.time}
+                value={editedMovie.time}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, time: e.target.value })
+                  setEditedMovie({ ...editedMovie, time: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white"
               />
@@ -124,9 +104,9 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               <input
                 type="date"
                 placeholder="วันที่เริ่มฉาย"
-                value={newMovie.date}
+                value={editedMovie.date}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, date: e.target.value })
+                  setEditedMovie({ ...editedMovie, date: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white"
               />
@@ -134,40 +114,48 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               <input
                 type="date"
                 placeholder="วันที่สิ้นสุด"
-                value={newMovie.endDate}
+                value={editedMovie.endDate}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, endDate: e.target.value })
+                  setEditedMovie({ ...editedMovie, endDate: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white"
               />
               {/* สถานะ */}
               <select
-                value={newMovie.status}
+                value={editedMovie.status}
                 onChange={(e) =>
-                  setNewMovie({ ...newMovie, status: e.target.value })
+                  setEditedMovie({ ...editedMovie, status: e.target.value })
                 }
                 className="w-full bg-white/10 border border-gray-500 rounded-md px-3 py-2 text-sm text-white"
               >
                 <option value="Now Showing">Now Showing</option>
                 <option value="Coming Soon">Coming Soon</option>
+                <option value="Ended">Ended</option>
               </select>
             </div>
             <div className="md:w-[260px] w-full flex flex-col items-center md:items-center">
               {/* 📸 Upload poster (เชื่อมกับ UploadImage) */}
               <UploadImage
-                label="อัปโหลดโปสเตอร์ภาพยนตร์"
+                label="อัปโหลดโปสเตอร์ใหม่ (ถ้ามี)"
+                onUpload={(url) =>
+                  setEditedMovie({ ...editedMovie, poster: url })
+                }
                 auto={true}
                 showActions={false}
-                onUpload={(url: string) =>
-                  setNewMovie({ ...newMovie, poster: url })
-                }
               />
             </div>
           </div>
           <div className="flex justify-center gap-3 pt-4">
-            <Button variant="primary" size="md" onClick={handleSave}>
-              บันทึก
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => {
+                handleSave();
+              }}
+            >
+              ยืนยัน
             </Button>
+
             <Dialog.Close asChild>
               <Button variant="danger" size="md">
                 ยกเลิก

@@ -10,7 +10,7 @@ export function BaseTable<T>({ columns, data, renderRow }: BaseTableProps<T>) {
   return (
     <div className="w-full rounded-xl">
       {/* ตาราง Header */}
-      <table className="w-full border-collapse table-fixed text-left ">
+      <table className="w-full border-collapse table-fixed ">
         <colgroup>
           {columns.map((_, i) => (
             <col key={i} />
@@ -24,7 +24,7 @@ export function BaseTable<T>({ columns, data, renderRow }: BaseTableProps<T>) {
             shadow-[0_2px_10px_rgba(0,0,0,0.25)]"
           >
             {columns.map((col, i) => (
-              <th key={i} className="p-4 font-semibold text-left">
+              <th key={i} className="p-4 font-semibold ">
                 {col}
               </th>
             ))}

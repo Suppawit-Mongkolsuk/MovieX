@@ -115,7 +115,7 @@ const ManageHome = () => {
           </div>
         </div>
 
-        {/* ตาราง scroll  */}
+        {/* ตาราง  */}
         <div className="overflow-x-auto overflow-y-hidden rounded-lg shadow-md border border-white/10 backdrop-blur-sm">
           <div className="min-w-[700px] sm:min-w-full">
             <BaseTable
@@ -133,25 +133,25 @@ const ManageHome = () => {
                   key={user.id}
                   className="border-t border-gray-700 hover:bg-white/5 transition text-[11px] sm:text-sm md:text-base text-left"
                 >
-                  <td className="p-2 sm:p-3 md:p-4 text-left">
+                  <td className="p-2 sm:p-3 md:p-4 flex items-center justify-center">
                     <img
                       src={user.avatar}
                       alt={user.name_user}
-                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover "
                     />
                   </td>
-                  <td className="p-2 sm:p-3 text-left">{user.name_user}</td>
-                  <td className="p-2 sm:p-3 break-all text-left">
+                  <td className="p-2 sm:p-3 text-center">{user.name_user}</td>
+                  <td className="p-2 sm:p-3 text-left break-words whitespace-normal max-w-[180px] ">
                     {user.gmail}
                   </td>
-                  <td className="p-2 sm:p-3 text-left">{user.phone}</td>
-                  <td className="p-2 sm:p-3 text-left">
+                  <td className="p-2 sm:p-3 text-center">{user.phone}</td>
+                  <td className="p-2 sm:p-3 text-center">
                     <BaseSelectRole
                       value={user.role}
                       onChange={(newRole) => handleSelectRole(user, newRole)}
                     />
                   </td>
-                  <td className="p-2 sm:p-3 text-left">
+                  <td className="p-2 sm:p-3 text-center">
                     {user.isLogin ? (
                       <span className="text-green-500 font-semibold">
                         ออนไลน์
