@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavbarAdmin } from '../../components/base/NavbarAdmin';
 import { SearchBar } from '../../components/base/SearchBar';
-import { BaseSelectRole } from '../../components/base/SelectRole';
+import { BaseSelectRole } from '../../components/layout/SelectRole';
 import { BaseTable } from '../../components/base/Table';
-import { ConfirmRoleDialog } from '../../components/base/DialogConfirm';
+import { ConfirmRoleDialog } from '../../components/layout/DialogConfirm';
 
 interface User {
   id: string;

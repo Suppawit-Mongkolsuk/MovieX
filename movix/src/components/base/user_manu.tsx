@@ -4,12 +4,10 @@ import { Link } from 'react-router-dom';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { User } from '../../api/typeuser';
-import Button from './Button';
+import UploadImage from './UploadImage';
 
 export default function UserMenu() {
   const [user, setUser] = useState<User | null>(null); // เก็บข้อมูล user ปัจจุบัน
-  const [file, setFile] = useState<File | null>(null); // ไฟล์ที่เลือก
-  const [uploading, setUploading] = useState(false); // สถานะกำลังอัปโหลด
   const [openDialog, setOpenDialog] = useState(false); // เปิด/ปิด modal
 
   // 🚀 ดึงข้อมูล user จาก MockAPI
@@ -43,34 +41,18 @@ export default function UserMenu() {
     // reload
     window.location.reload();
   };
-  // อัปโหลดรูปภาพ
-  const handleUpload = async () => {
-    if (!file || !user) return;
-    setUploading(true);
+  // อัปโหลดรูปภาพใหม่
+  const handleUploaded = async (url: string) => {
+    if (!user) return;
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'movix_upload');
-
-      const uploadRes = await fetch(
-        'https://api.cloudinary.com/v1_1/da1kj73c0/image/upload',
-        { method: 'POST', body: formData }
-      );
-      const uploadData = await uploadRes.json();
-      const imageUrl = uploadData.secure_url;
-
       await axios.put(
         `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${user.id}`,
-        { avatar: imageUrl }
+        { avatar: url }
       );
-      // setรูปเลย
-      setUser({ ...user, avatar: imageUrl });
-      setFile(null);
+      setUser({ ...user, avatar: url });
       setOpenDialog(false);
     } catch (error) {
-      console.error('อัปโหลดไม่สำเร็จ:', error);
-    } finally {
-      setUploading(false);
+      console.error('อัปเดตรูปโปรไฟล์ไม่สำเร็จ:', error);
     }
   };
 
@@ -135,34 +117,7 @@ export default function UserMenu() {
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
             w-[90%] max-w-sm bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl shadow-xl p-6"
           >
-            <Dialog.Title className="text-lg font-semibold text-center mb-4">
-              เพิ่มรูปโปรไฟล์
-            </Dialog.Title>
-
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
-              className="block w-full text-sm text-gray-300 mb-4 bg-white/50 rounded-md"
-            />
-
-            <div className="flex justify-center gap-3">
-              <Dialog.Close asChild>
-                <Button variant="danger" size="md">
-                  ยกเลิก
-                </Button>
-              </Dialog.Close>
-
-              <Button
-                onClick={handleUpload}
-                disabled={!file || uploading}
-                variant="primary"
-                size="md"
-                className="disabled:opacity-50"
-              >
-                {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}
-              </Button>
-            </div>
+            <UploadImage onUpload={handleUploaded} />
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>

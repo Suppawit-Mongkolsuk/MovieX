@@ -1,6 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion } from 'framer-motion';
-import Button from './Button';
+import Button from '../base/Button';
 
 interface ConfirmRoleDialogProps {
   open: boolean;
