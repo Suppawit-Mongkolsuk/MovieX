@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import Button from '../base/Button';
 import * as Dialog from '@radix-ui/react-dialog';
+import { toast } from 'react-toastify';
 
 type UploadImageProps = {
   onUpload: (url: string) => void; // ส่ง URL กลับไปให้ parent
@@ -33,12 +34,13 @@ export default function UploadImage({
   const [preview, setPreview] = useState<string | null>(null);
 
   // อัปโหลดขึ้น Cloudinary
-  const upload = async () => {
-    if (!file) return;
+  const upload = async (targetFile?: File) => {
+    const fileToUpload = targetFile || file;
+    if (!fileToUpload) return;
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
       formData.append('upload_preset', uploadPreset);
 
       const res = await fetch(
@@ -46,11 +48,18 @@ export default function UploadImage({
         { method: 'POST', body: formData }
       );
       const data = await res.json();
-      const url: string = data.secure_url;
-      onUpload(url); // ส่ง url กลับให้ parent
+      console.log('Cloudinary response:', data);
+      const url: string | undefined = data.secure_url;
+      if (url) {
+        // ส่ง url กลับให้ parent
+        onUpload(url);
+        toast.success('อัปโหลสำเร็จ');
+      } else {
+        toast.error('ไม่พบ URL รูปภาพจาก Cloudinary');
+      }
     } catch (err) {
       console.error('อัปโหลดไม่สำเร็จ:', err);
-      alert('อัปโหลดไม่สำเร็จ');
+      toast.error('อัปโหลดไม่สำเร็จ');
     } finally {
       setUploading(false);
     }
@@ -69,8 +78,7 @@ export default function UploadImage({
     setPreview(f ? URL.createObjectURL(f) : null);
 
     if (auto && f) {
-      // โหมดอัปโหลดอัตโนมัติ
-      await upload();
+      await upload(f); // ส่งไฟล์เข้า upload โดยตรง
     }
   };
 
@@ -112,7 +120,7 @@ export default function UploadImage({
               <Button
                 variant="primary"
                 size="md"
-                onClick={upload}
+                onClick={() => upload()}
                 disabled={!file || uploading}
               >
                 {uploading ? 'กำลังอัปโหลด...' : 'อัปโหลด'}

@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { motion } from 'framer-motion';
 import Button from '../base/Button';
+import { toast } from 'react-toastify';
 
 interface ConfirmRoleDialogProps {
   open: boolean;
@@ -52,7 +53,16 @@ export const ConfirmRoleDialog = ({
               <Button variant="danger" size="md" onClick={onCancel}>
                 ยกเลิก
               </Button>
-              <Button variant="primary" size="md" onClick={onConfirm}>
+              <Button
+                variant="primary"
+                size="md"
+                onClick={() => {
+                  onConfirm?.();
+                  setTimeout(() => {
+                    toast.success('แก้ไขเสร็จสิ้น ✅');
+                  }, 800);
+                }}
+              >
                 ยืนยัน
               </Button>
             </div>

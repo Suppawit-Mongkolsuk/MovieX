@@ -3,7 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import axios from 'axios';
 import Button from '../base/Button';
 import UploadImage from '../base/UploadImage';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
   const [open, setOpen] = useState(false); //สำหรับเปิดปิด ppopup
@@ -21,13 +21,16 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
   // 📤 ฟังก์ชันบันทึกหนังใหม่ลง MockAPI
   const handleSave = async () => {
     try {
+      console.log('🚀 เริ่มบันทึก:', newMovie);
       // ตรวจสอบว่ากรอกข้อมูลครบไหม
       if (!newMovie.title || !newMovie.poster || !newMovie.trailer) {
-        toast.error('กรุณากรอกข้อมูลให้ครบและอัปโหลดโปสเตอร์');
+        console.log('❌ ข้อมูลไม่ครบ:', newMovie);
+        toast.error('กรุณากรอกข้อมูลให้ครบ');
         return;
       }
 
       // เรียก axios.post() เพื่อส่งข้อมูลไป MockAPI
+      console.log('📤 เตรียมส่งข้อมูล:', newMovie);
       await axios.post(
         'https://68f0fcef0b966ad50034f883.mockapi.io/movies',
         newMovie
