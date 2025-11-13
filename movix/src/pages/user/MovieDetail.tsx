@@ -4,6 +4,7 @@ import type { Movie } from '../../api/typeMovie';
 import { useState, useEffect } from 'react';
 import Navbar from '../../components/base/Navbar';
 import TrailerPlayer from '../../components/layout/TrailerPlayer';
+import ShowtimeSection from '../../components/layout/showtime';
 
 export default function MovieDetail() {
   const [movies, setGetMovies] = useState<Movie[]>([]);
@@ -51,6 +52,9 @@ export default function MovieDetail() {
         <div className="w-full md:w-3/3 shadow-xl shadow-black/40">
           <TrailerPlayer url={movie.trailer} title={movie.title} />
         </div>
+      </div>
+      <div className="w-full mt-12 px-6 md:px-12">
+        <ShowtimeSection movieId={movie.movieID} />
       </div>
     </div>
   );
