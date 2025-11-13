@@ -3,7 +3,7 @@ import axios from 'axios';
 
 interface Showtime {
   id: string;
-  movieiD: string;
+  movieId: string;
   locationId: string;
   theaterId: string;
   date: string;
@@ -32,7 +32,7 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
     const fetchData = async () => {
       try {
         const resShowtime = await axios.get(
-          `https://68f0fcef0b966ad50034f883.mockapi.io/Showtime?movieId=${movieId}`
+          `https://68f0fcef0b966ad50034f883.mockapi.io/Showtime?movieID=${movieId}`
         );
         setShowtimes(resShowtime.data);
 
