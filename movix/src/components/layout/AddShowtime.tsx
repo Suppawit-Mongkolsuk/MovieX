@@ -320,6 +320,19 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   };
 
   // ---------------------------------------------------------
+  // helper: reset form
+  // ---------------------------------------------------------
+  const resetForm = () => {
+    setMovieId('');
+    setSelectedLocationIds([]);
+    setSelectedTheaterIds([]);
+    setDate('');
+    setEnddate('');
+    setDayTimeMap({});
+    setTimeInputs({});
+  };
+
+  // ---------------------------------------------------------
   // 🟡 กดสร้างรอบหนัง (แบบใหม่: loop จาก dayTimeMap)
   // ---------------------------------------------------------
   const handleCreate = async () => {
@@ -408,6 +421,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
       toast.dismiss();
       toast.success('สร้างรอบหนังสำเร็จ!');
 
+      resetForm();
       setOpen(false);
       onSuccess();
     } catch (err) {
@@ -704,7 +718,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
             {/* ปุ่ม action */}
             <div className="flex justify-end gap-3 pt-3">
               <Dialog.Close asChild>
-                <Button variant="danger" size="md">
+                <Button variant="danger" size="md" onClick={resetForm}>
                   ยกเลิก
                 </Button>
               </Dialog.Close>
