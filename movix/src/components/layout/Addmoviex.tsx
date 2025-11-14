@@ -23,13 +23,7 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
     try {
       console.log('🚀 เริ่มบันทึก:', newMovie);
       // ตรวจสอบว่ากรอกข้อมูลครบไหม
-      if (
-        !newMovie.title ||
-        !newMovie.poster ||
-        !newMovie.trailer ||
-        newMovie.date ||
-        newMovie.endDate
-      ) {
+      if (!newMovie.title || !newMovie.poster || !newMovie.trailer) {
         console.log('❌ ข้อมูลไม่ครบ:', newMovie);
         toast.error('กรุณากรอกข้อมูลให้ครบ');
         return;
