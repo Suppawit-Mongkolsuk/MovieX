@@ -228,7 +228,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   }, [date, enddate, selectedTheaterIds]);
 
   // ---------------------------------------------------------
-  // helper: format วันที่แบบไทยสั้น ๆ
+  // วันที่แบบไทย
   // ---------------------------------------------------------
   const formatDateTH = (d: string) => {
     if (!d) return d;
@@ -245,7 +245,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   };
 
   // ---------------------------------------------------------
-  // helper: key สำหรับ timeInputs
+  //  timeInputs
   // ---------------------------------------------------------
   const makeInputKey = (dateStr: string, theaterId: string) =>
     `${dateStr}__${theaterId}`;
@@ -261,7 +261,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     const rawValue = (input.manual || input.picker || '').trim();
     if (!rawValue) return;
 
-    // normalize เวลาเล็กน้อย เช่น 13.00 -> 13:00
+    // เพิ่ม : ให้เวลา
     let value = rawValue.replace('.', ':');
     if (!value.includes(':') && value.length === 4) {
       value = `${value.slice(0, 2)}:${value.slice(2)}`;
@@ -431,7 +431,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   };
 
   // ---------------------------------------------------------
-  // 🔴 UI ส่วน Dialog
+  //  UI ส่วน Dialog
   // ---------------------------------------------------------
   const sortedDates = Object.keys(dayTimeMap).sort();
 
@@ -440,10 +440,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
       <Dialog.Root open={open} onOpenChange={setOpen}>
         {/* ปุ่มเปิดฟอร์ม */}
         <Dialog.Trigger asChild>
-          <Button
-            onClick={() => setOpen(true)}
-            className="bg-movix-gold text-black px-6"
-          >
+          <Button onClick={() => setOpen(true)} variant="secondary" size="lg">
             + Add Showtime
           </Button>
         </Dialog.Trigger>
