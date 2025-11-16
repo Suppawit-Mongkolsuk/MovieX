@@ -252,33 +252,36 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     const key = makeInputKey(dateStr, theaterId);
     const input = timeInputs[key] || { manual: '', picker: '' };
 
-    // เอาค่าจาก manual ก่อน ถ้าไม่มีใช้จาก picker
-    const rawValue = (input.manual || input.picker || '').trim();
-    if (!rawValue) return;
+    let raw = input.manual || input.picker;
+    raw = raw.trim();
 
-    // เพิ่ม : ให้เวลา
-    let value = rawValue.replace('.', ':');
-    if (!value.includes(':') && value.length === 4) {
-      value = `${value.slice(0, 2)}:${value.slice(2)}`;
+    if (!raw) return;
+
+    raw = raw.replace('.', ':');
+    if (!raw.includes(':') && raw.length === 4) {
+      raw = `${raw.substring(0, 2)}:${raw.substring(2)}`;
+    }
+
+    const pattern = /^[0-2][0-9]:[0-5][0-9]$/;
+    if (!pattern.test(raw)) {
+      toast.error('รูปแบบเวลาไม่ถูกต้อง (เช่น 13:00)');
+      return;
     }
 
     setDayTimeMap((prev) => {
-      const prevDay = prev[dateStr] || {};
-      const prevTimes = prevDay[theaterId] || [];
+      const copy = structuredClone(prev);
 
-      // กัน duplicate
-      if (prevTimes.includes(value)) return prev;
+      if (!copy[dateStr]) copy[dateStr] = {};
+      if (!copy[dateStr][theaterId]) copy[dateStr][theaterId] = [];
 
-      return {
-        ...prev,
-        [dateStr]: {
-          ...prevDay,
-          [theaterId]: [...prevTimes, value].sort(), // sort เวลาเล็กน้อย
-        },
-      };
+      if (!copy[dateStr][theaterId].includes(raw)) {
+        copy[dateStr][theaterId].push(raw);
+        copy[dateStr][theaterId].sort();
+      }
+
+      return copy;
     });
 
-    // เคลียร์ input ทั้งสองช่อง
     setTimeInputs((prev) => ({
       ...prev,
       [key]: { manual: '', picker: '' },
@@ -383,17 +386,20 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
           const theater = theaters.find((t) => t.id === theaterId);
           const locationId = theater?.locationId || '';
 
-          await axios.post(
-            'https://68f0fcef0b966ad50034f883.mockapi.io/Showtime',
-            {
-              movieID: movieId,
-              locationId,
-              theaterId,
-              date: dateStr,
-              enddate, // เก็บช่วงรวมไว้เหมือนเดิม ถ้าอยากให้เท่ากับ dateStr ก็เปลี่ยนได้
-              times,
-            }
-          );
+          // แตกเวลาทีละตัว → 1 เวลา = 1 record
+          for (const time of times) {
+            await axios.post(
+              'https://68f0fcef0b966ad50034f883.mockapi.io/Showtime',
+              {
+                movieID: movieId,
+                locationId,
+                theaterId,
+                date: dateStr,
+                enddate: dateStr, // ให้ตรงวันจริง
+                times: [time], // เก็บเป็น array แต่มีแค่ค่าเดียว
+              }
+            );
+          }
         }
       }
 

@@ -1,6 +1,11 @@
-const Seat = () => {
-    return (
-        <h1>Seat Selection Page</h1>
-    )
+import { useParams } from 'react-router-dom';
+
+export default function Seat() {
+  const { showtimeId } = useParams();
+
+  return (
+    <div className="text-white">
+      <h1>กำลังจองรอบ: {showtimeId}</h1>
+    </div>
+  );
 }
-export default Seat;

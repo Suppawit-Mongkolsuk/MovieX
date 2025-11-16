@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 interface Showtime {
   id: string;
-  movieId: string;
+  movieID: string;
   locationId: string;
   theaterId: string;
   date: string;
+  enddate: string;
   times: string[];
 }
 
@@ -21,11 +23,22 @@ interface Theater {
   type: string;
 }
 
+type GroupedMap = Record<
+  string,
+  {
+    theaterId: string;
+    times: string[];
+    showIds: string[];
+  }
+>;
+
 export default function ShowtimeSection({ movieId }: { movieId: string }) {
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [locations, setLocations] = useState<Location[]>([]);
   const [theatersData, setTheatersData] = useState<Theater[]>([]);
+
+  const navigate = useNavigate();
 
   // โหลดข้อมูลทั้งหมด
   useEffect(() => {
@@ -36,7 +49,6 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
         );
         setShowtimes(resShowtime.data);
 
-        // เซ็ตวันเริ่มต้น
         if (resShowtime.data.length > 0) {
           setSelectedDate(resShowtime.data[0].date);
         }
@@ -58,13 +70,13 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
     fetchData();
   }, [movieId]);
 
-  // ดึงวันที่ทั้งหมดจาก showtime จริง
+  // วันทั้งหมด
   const uniqueDates = [...new Set(showtimes.map((st) => st.date))];
 
-  // Filter เฉพาะวันที่เลือก
+  // filter ตามวันที่เลือก
   const filtered = showtimes.filter((st) => st.date === selectedDate);
 
-  // Group ตาม location
+  // group ตาม location
   const grouped: Record<string, Showtime[]> = {};
   filtered.forEach((st) => {
     if (!grouped[st.locationId]) grouped[st.locationId] = [];
@@ -111,19 +123,36 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
           </h3>
 
           <div className="space-y-8">
-            {shows.map((show) => (
+            {/* ⭐ Group แยกตามโรงแบบ type-safe แล้ว */}
+            {Object.entries(
+              shows.reduce<GroupedMap>((acc, st) => {
+                if (!acc[st.theaterId]) {
+                  acc[st.theaterId] = {
+                    theaterId: st.theaterId,
+                    times: [],
+                    showIds: [],
+                  };
+                }
+
+                acc[st.theaterId].times.push(...st.times);
+                acc[st.theaterId].showIds.push(st.id);
+
+                return acc;
+              }, {})
+            ).map(([theaterId, data]) => (
               <div
-                key={show.id}
+                key={theaterId}
                 className="p-5 rounded-xl bg-white/5 border border-white/10 shadow-sm"
               >
                 <p className="text-white/80 text-sm font-semibold mb-4">
-                  {getTheaterName(show.theaterId)}
+                  {getTheaterName(theaterId)}
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  {show.times.map((t) => (
+                  {data.times.map((t, index) => (
                     <button
-                      key={t}
+                      key={theaterId + t + index}
+                      onClick={() => navigate(`/seat/${data.showIds[index]}`)}
                       className="
                         px-4 py-2 rounded-full
                         bg-gradient-to-b from-white/15 to-white/5

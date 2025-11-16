@@ -28,6 +28,13 @@ interface Location {
   name: string;
 }
 
+interface GroupedByDate {
+  [date: string]: {
+    date: string;
+    times: string[];
+  };
+}
+
 export default function ManageShowtime() {
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [moviesData, setMoviesData] = useState<Movie[]>([]);
@@ -118,13 +125,6 @@ export default function ManageShowtime() {
                   <h2 className="md:text-xl text-lg font-bold text-movix-gold p-2">
                     🎬 {movie.title}
                   </h2>
-
-                  <DeleteShowtimeButton
-                    movieID={movie.movieID}
-                    locationId=""
-                    theaterId=""
-                    onSuccess={loadMasterData}
-                  />
                 </div>
 
                 {locationsData.map((loc) => {
@@ -148,7 +148,7 @@ export default function ManageShowtime() {
                         return (
                           <div
                             key={th.id}
-                            className="bg-black/20 p-4 rounded-md mb-4 sm:ml-6 ml-2 border border-white/5"
+                            className="bg-black/20 p-4 rounded-md mb-4  border border-white/5"
                           >
                             <div className="flex items-center justify-between mb-3">
                               <h4 className="font-medium">🎦 {th.name}</h4>
@@ -161,29 +161,48 @@ export default function ManageShowtime() {
                             </div>
 
                             <div className="space-y-2">
-                              {thST.map((st) => (
-                                <div
-                                  key={st.id}
-                                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white/5 p-3 rounded-md gap-3"
-                                >
-                                  <div className="text-sm whitespace-nowrap">
-                                    <span className="font-semibold text-movix-gold">
-                                      {st.date}
-                                    </span>
-                                  </div>
-
-                                  <div className="flex gap-2 flex-wrap justify-center sm:justify-start flex-1">
-                                    {st.times.map((t) => (
-                                      <span
-                                        key={t}
-                                        className="px-3 py-1 bg-movix-gold/20 border border-movix-gold rounded-full text-xs text-movix-gold"
-                                      >
-                                        {t}
+                              {/* Group by date */}
+                              {Object.entries(
+                                thST.reduce((acc: GroupedByDate, st) => {
+                                  if (!acc[st.date]) {
+                                    acc[st.date] = {
+                                      date: st.date,
+                                      times: [],
+                                    };
+                                  }
+                                  acc[st.date].times.push(...st.times);
+                                  return acc;
+                                }, {})
+                              ).map(
+                                ([date, data]: [
+                                  string,
+                                  { date: string; times: string[] }
+                                ]) => (
+                                  <div
+                                    key={date}
+                                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white/5 p-3 rounded-md gap-3"
+                                  >
+                                    <div className="text-sm whitespace-nowrap">
+                                      <span className="font-semibold text-white">
+                                        {date}
                                       </span>
-                                    ))}
+                                    </div>
+
+                                    <div className="flex gap-2 flex-wrap justify-center sm:justify-start flex-1">
+                                      {data.times.map(
+                                        (t: string, index: number) => (
+                                          <span
+                                            key={t + index}
+                                            className="px-3 py-1 bg-movix-gold/20 border border-movix-gold rounded-full text-xs text-movix-gold"
+                                          >
+                                            {t}
+                                          </span>
+                                        )
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                )
+                              )}
                             </div>
                           </div>
                         );
