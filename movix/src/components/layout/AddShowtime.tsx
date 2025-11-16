@@ -3,12 +3,7 @@ import axios from 'axios';
 import Button from '../../components/base/Button';
 import * as Dialog from '@radix-ui/react-dialog';
 import { toast } from 'react-toastify';
-
-interface Movie {
-  id: string;
-  movieID: string; // id ที่ใช้เชื่อมกับ Showtime
-  title: string;
-}
+import type { Movie } from '../../api/typeMovie';
 
 interface Location {
   id: string;
@@ -333,7 +328,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   };
 
   // ---------------------------------------------------------
-  // 🟡 กดสร้างรอบหนัง (แบบใหม่: loop จาก dayTimeMap)
+  // กดสร้างรอบหนัง (แบบใหม่: loop จาก dayTimeMap)
   // ---------------------------------------------------------
   const handleCreate = async () => {
     if (!movieId) {
@@ -469,11 +464,13 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
                 onChange={(e) => setMovieId(e.target.value)}
               >
                 <option value="">-- เลือกหนัง --</option>
-                {movies.map((m) => (
-                  <option key={m.id} value={m.movieID}>
-                    {m.title}
-                  </option>
-                ))}
+                {movies
+                  .filter((m) => m.status === 'Now Showing')
+                  .map((m) => (
+                    <option key={m.id} value={m.movieID}>
+                      {m.title}
+                    </option>
+                  ))}
               </select>
             </div>
 
