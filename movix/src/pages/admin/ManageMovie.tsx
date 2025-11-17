@@ -7,11 +7,13 @@ import toast from 'react-hot-toast';
 import type { Movie } from '../../api/typeMovie';
 import EditMovie from '../../components/layout/EditMovie';
 import DeleteMovie from '../../components/layout/DeleteMovie';
-import FilterStatus from '../../components/layout/FilterStatus';
+import FilterDropdown from '../../components/layout/FilterDropdown';
 
 const ManageMovie = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [allMovies, setAllMovies] = useState<Movie[]>([]); // เก็บข้อมูลไว้กรอง
+  const [filterStatus, setFilterStatus] = useState('ทั้งหมด'); //<'All'>
+  const filterItems = ['ทั้งหมด', 'กำลังฉาย', 'เข้าโรงเร็วๆนี้', 'ออกโรง'];
 
   // โหลดข้อมูลจาก MockAPI
   const fetchMovies = async () => {
@@ -42,14 +44,28 @@ const ManageMovie = () => {
           </h1>
           <div className="w-full md:w-auto flex flex-col md:flex-row items-center justify-center md:justify-end gap-3">
             {/* ตัวกรองสถานะ */}
-            <FilterStatus
-              onFilterChange={(status) => {
-                if (status === 'All') {
+            <FilterDropdown
+              value={filterStatus}
+              items={filterItems}
+              onChange={(status) => {
+                setFilterStatus(status);
+
+                if (status === 'ทั้งหมด') {
                   setMovies(allMovies);
-                } else {
-                  const filtered = allMovies.filter((m) => m.status === status); //ใช้ข้อมูลต้นฉบับ
-                  setMovies(filtered);
+                  return;
                 }
+
+                // แปลงชื่อภาษาไทย → คีย์จริง
+                const mapStatus: Record<string, string> = {
+                  กำลังฉาย: 'Now Showing',
+                  เข้าโรงเร็วๆนี้: 'Coming Soon',
+                  ออกโรง: 'Ended',
+                };
+
+                const selected = mapStatus[status];
+                const filtered = allMovies.filter((m) => m.status === selected);
+
+                setMovies(filtered);
               }}
             />
 

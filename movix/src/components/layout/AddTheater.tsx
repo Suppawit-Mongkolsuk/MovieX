@@ -55,7 +55,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
       const rowLabel = String.fromCharCode(64 + r); // 'A', 'B', ...
 
       const price = rowPrices[rowLabel] || 0;
-      const seatType = price > 220 ? 'VIP' : 'Standard';
+      const seatType = price > 260 ? 'VIP' : 'Standard';
 
       for (let c = 1; c <= cols; c++) {
         const seatNumber = `${rowLabel}${c}`;
@@ -173,10 +173,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
   return (
     <>
       {/* ปุ่มเปิดฟอร์ม */}
-      <Button
-        onClick={() => setOpen(true)}
-        className="bg-movix-gold text-black px-6"
-      >
+      <Button onClick={() => setOpen(true)} variant="secondary" size="lg">
         + Add Theater
       </Button>
 

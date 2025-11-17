@@ -6,6 +6,7 @@ import EditTheaterButton from '../../components/layout/EditTheaterButton';
 import DeleteTheaterButton from '../../components/layout/DeleteTheaterButton';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import FilterDropdown from '../../components/layout/FilterDropdown';
 
 interface Theater {
   id: string;
@@ -25,6 +26,7 @@ interface Location {
 const ManageTheaters = () => {
   const [theaters, setTheaters] = useState<Theater[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [filterLocation, setFilterLocation] = useState('all');
 
   // โหลดข้อมูลโรงทั้งหมด
   const loadTheaters = async () => {
@@ -38,7 +40,7 @@ const ManageTheaters = () => {
     }
   };
 
-  // 📌 โหลดสาขา
+  //  โหลดสาขา
   const loadLocations = async () => {
     try {
       const res = await axios.get(
@@ -58,19 +60,45 @@ const ManageTheaters = () => {
   const getLocationName = (id: string) =>
     locations.find((l) => l.id === id)?.name || '-';
 
+  const filteredTheaters =
+    filterLocation === 'all'
+      ? theaters
+      : theaters.filter((t) => t.locationId === filterLocation);
+
   return (
     <div className="pt-16 px-6 pb-12">
       <NavbarAdmin />
 
-      <div className="flex items-center justify-between mb-8 mt-8">
-        <h1 className="text-2xl font-bold text-white">🎬 Manage Theaters</h1>
+      <div className="px-2 sm:px-4 md:px-12 mt-6 md:mt-12">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 md:mb-8">
+          <h1 className="text-lg text-center sm:text-xl md:text-2xl font-bold  ">
+            📋 รายชื่อหนังทั้งหมด
+          </h1>
+          <div className="w-full md:w-auto flex flex-col md:flex-row items-center justify-center md:justify-end gap-3">
+            <FilterDropdown
+              value={
+                filterLocation === 'all'
+                  ? 'ทั้งหมด'
+                  : locations.find((l) => l.id === filterLocation)?.name || ''
+              }
+              items={[
+                { label: 'ทั้งหมด', value: 'all' },
+                ...locations.map((l) => ({
+                  label: l.name,
+                  value: l.id,
+                })),
+              ]}
+              onChange={(value) => setFilterLocation(value)}
+            />
 
-        <AddTheater onSuccess={loadTheaters} />
+            <AddTheater onSuccess={loadTheaters} />
+          </div>
+        </div>
       </div>
 
       {/* Table Layout */}
       <div className="space-y-4">
-        {theaters.map((th) => (
+        {filteredTheaters.map((th) => (
           <div
             key={th.id}
             className="bg-white/5 border border-white/10 p-4 rounded-lg backdrop-blur-sm shadow"

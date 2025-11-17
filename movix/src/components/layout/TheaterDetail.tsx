@@ -87,23 +87,26 @@ export default function TheaterDetail({ theater }: theater) {
         <Dialog.Content
           className="
             fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-            w-auto max-h-[85vh]
-            overflow-y-auto overflow-x-auto 
-            bg-white/10 border border-white/20 
-            rounded-xl p-6 text-white shadow-xl
+            w-[95%] sm:w-auto sm:max-w-4xl
+            max-h-[85vh]
+            overflow-y-auto overflow-x-auto
+            bg-white/10 border border-white/20
+            rounded-xl p-4 sm:p-6 text-white shadow-xl
           "
         >
           <Dialog.Title className="text-2xl font-bold text-movix-gold mb-4">
             ผังที่นั่งโรง {theater.name}
           </Dialog.Title>
-          <div className="bg-white/5 p-5 rounded-lg border border-white/10">
+          <div className="bg-white/5 p-5 rounded-lg border border-white/10 w-full  overflow-x-auto">
             <div
               className="
-                mx-auto mb-8 px-6 py-3
+                w-[600px] sm:w-full mx-auto
+                mb-8 px-4 py-3
                 bg-white/10 backdrop-blur-md
                 border border-white/20
                 rounded-lg
                 text-center text-white font-semibold text-lg
+                
               "
             >
               จอภาพยนตร์
@@ -133,9 +136,9 @@ export default function TheaterDetail({ theater }: theater) {
                         <div
                           style={{
                             display: 'grid',
-                            gridTemplateColumns: `repeat(${maxCols}, minmax(40px, 1fr))`,
+                            gridTemplateColumns: `repeat(${maxCols}, minmax(32px, 1fr))`,
                           }}
-                          className="gap-2 place-items-center"
+                          className="flex gap-2 place-items-center"
                         >
                           {seats
                             .sort(
@@ -151,15 +154,18 @@ export default function TheaterDetail({ theater }: theater) {
                                 <div
                                   key={s.seatNumber}
                                   className="
-                                    flex items-center justify-center
-                                    w-10 h-10
+                                    flex  items-center justify-center
+                                    w-6 h-6 sm:w-10 sm:h-10
                                     rounded-md
                                     bg-white/10 backdrop-blur-md
                                     border border-white/30
-                                    shadow-[0_0_6px_rgba(255,255,255,0.25)]
+                                    shadow-[0_0_4px_rgba(255,255,255,0.25)]
                                   "
                                 >
-                                  <SeatIcon color={seatColor} />
+                                  <SeatIcon
+                                    color={seatColor}
+                                    className="w-3 h-3 sm:w-6 sm:h-6"
+                                  />
                                 </div>
                               );
                             })}
