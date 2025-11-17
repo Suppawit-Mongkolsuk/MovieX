@@ -22,6 +22,9 @@ interface theater {
     type?: string;
   };
 }
+interface TheaterSeatItem {
+  seat: Seat[];
+}
 
 export default function TheaterDetail({ theater }: theater) {
   const [seats, setSeats] = useState<Seat[]>([]);
@@ -35,10 +38,6 @@ export default function TheaterDetail({ theater }: theater) {
         const res = await axios.get(
           `https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats?TheaterId=${theater.id}`
         );
-
-        interface TheaterSeatItem {
-          seat: Seat[];
-        }
 
         const allSeats = (res.data as TheaterSeatItem[]).flatMap(
           (item) => item.seat
