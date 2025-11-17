@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { NavbarAdmin } from '../../components/base/NavbarAdmin';
 import AddTheater from '../../components/layout/AddTheater';
 import TheaterDetail from '../../components/layout/TheaterDetail';
+import EditTheaterButton from '../../components/layout/EditTheaterButton';
+import DeleteTheaterButton from '../../components/layout/DeleteTheaterButton';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -87,12 +89,12 @@ const ManageTheaters = () => {
 
               <div className="flex gap-2 mt-4 sm:mt-0">
                 <TheaterDetail theater={th} />
-                <button className="px-4 py-2 bg-yellow-500 text-black rounded-md">
-                  แก้ไข
-                </button>
-                <button className="px-4 py-2 bg-red-500 text-white rounded-md">
-                  ลบ
-                </button>
+                <EditTheaterButton theater={th} onSuccess={loadTheaters} />
+                <DeleteTheaterButton
+                  theaterId={th.id}
+                  locationId={th.locationId}
+                  onSuccess={loadTheaters}
+                />
               </div>
             </div>
           </div>

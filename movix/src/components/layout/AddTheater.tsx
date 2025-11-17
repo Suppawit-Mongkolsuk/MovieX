@@ -9,15 +9,27 @@ interface Location {
   name: string;
 }
 
+interface TheaterForm {
+  name: string;
+  type: string;
+  rows: number;
+  cols: number;
+  rowPrices: Record<string, number>;
+}
+
 export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
   const [open, setOpen] = useState(false);
 
-  // state ของฟอร์ม
-  const [name, setName] = useState('');
-  const [type, setType] = useState('Standard');
   const [locationId, setLocationId] = useState('');
-  const [rows, setRows] = useState<number>(0);
-  const [cols, setCols] = useState<number>(0);
+  const [theaters, setTheaters] = useState<TheaterForm[]>([
+    {
+      name: '',
+      type: 'Standard',
+      rows: 0,
+      cols: 0,
+      rowPrices: {},
+    },
+  ]);
 
   // location list
   const [locations, setLocations] = useState<Location[]>([]);
@@ -31,11 +43,19 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
   }, []);
 
   // ฟังก์ชันสร้างเก้าอี้ทั้งหมด (Row × Col)
-  const generateSeats = (theaterId: string, rows: number, cols: number) => {
+  const generateSeats = (
+    theaterId: string,
+    rows: number,
+    cols: number,
+    rowPrices: Record<string, number>
+  ) => {
     const seats = [];
 
     for (let r = 1; r <= rows; r++) {
       const rowLabel = String.fromCharCode(64 + r); // 'A', 'B', ...
+
+      const price = rowPrices[rowLabel] || 0;
+      const seatType = price > 220 ? 'VIP' : 'Standard';
 
       for (let c = 1; c <= cols; c++) {
         const seatNumber = `${rowLabel}${c}`;
@@ -45,8 +65,8 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
           seatRow: rowLabel,
           seatCol: c.toString(),
           seatNumber,
-          seatType: 'Standard',
-          seatPrice: 0,
+          seatType,
+          seatPrice: price,
         });
       }
     }
@@ -54,61 +74,100 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
     return seats;
   };
 
-  // submit
   const handleSubmit = async () => {
-    if (!name || !locationId || rows <= 0 || cols <= 0) {
-      toast.error('กรอกข้อมูลให้ครบทุกช่อง');
+    if (!locationId) {
+      toast.error('กรุณาเลือกสาขา');
       return;
     }
 
-    toast.loading('กำลังสร้างโรง...');
+    if (theaters.length === 0) {
+      toast.error('กรุณาเพิ่มโรงอย่างน้อย 1 โรง');
+      return;
+    }
+
+    // เช็คว่าแต่ละโรงกรอกครบไหม
+    for (let i = 0; i < theaters.length; i++) {
+      const t = theaters[i];
+      if (!t.name || t.rows <= 0 || t.cols <= 0) {
+        toast.error(`กรุณากรอกข้อมูลให้ครบในโรงที่ ${i + 1}`);
+        return;
+      }
+    }
+
+    const loadingId = toast.loading('กำลังสร้างโรงหลายโรง...');
 
     try {
-      // 1) POST โรงใหม่
-      const res = await axios.post(
-        'https://68f0fcef0b966ad50034f883.mockapi.io/Theater',
-        {
-          name,
-          type,
-          locationId,
-          rows,
-          cols,
-          seatCount: rows * cols,
-          status: 'active',
-        }
-      );
+      // loop ทีละโรง
+      for (const t of theaters) {
+        // 1) POST โรงใหม่
+        const res = await axios.post(
+          'https://68f0fcef0b966ad50034f883.mockapi.io/Theater',
+          {
+            name: t.name,
+            type: t.type,
+            locationId,
+            rows: t.rows,
+            cols: t.cols,
+            seatCount: t.rows * t.cols,
+            status: 'active',
+          }
+        );
 
-      const theaterId = res.data.id;
+        const theaterId = res.data.id;
 
-      // 2generate seat
-      const seats = generateSeats(theaterId, rows, cols);
+        // 2) generate seats ตาม rows/cols ของโรงนั้น ๆ
+        const seats = generateSeats(theaterId, t.rows, t.cols, t.rowPrices);
 
-      // 3) ส่งเก้าอี้ทุกตัวขึ้น MockAPI (แบบ array เดียว)
-      await axios.post(
-        'https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats',
-        {
-          TheaterId: theaterId,
-          seat: seats,
-          seatPrice: 0,
-        }
-      );
+        // 3) ส่งเก้าอี้ทุกตัวขึ้น MockAPI เป็น array เดียว
+        await axios.post(
+          'https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats',
+          {
+            TheaterId: theaterId,
+            seat: seats,
+            seatPrice: 0,
+          }
+        );
+      }
 
-      toast.dismiss();
+      toast.dismiss(loadingId);
       toast.success('สร้างโรงสำเร็จ!');
 
       // reset form
-      setName('');
-      setType('Standard');
       setLocationId('');
-      setRows(0);
-      setCols(0);
+      setTheaters([
+        { name: '', type: 'Standard', rows: 0, cols: 0, rowPrices: {} },
+      ]);
 
       setOpen(false);
       onSuccess();
     } catch (err) {
       console.error(err);
+      toast.dismiss();
       toast.error('สร้างโรงไม่สำเร็จ');
     }
+  };
+
+  const handleTheaterChange = (
+    index: number,
+    field: keyof TheaterForm,
+    value: string | number | Record<string, number>
+  ) => {
+    setTheaters((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [field]: value } as TheaterForm;
+      return copy;
+    });
+  };
+
+  const addTheaterForm = () => {
+    setTheaters((prev) => [
+      ...prev,
+      { name: '', type: 'Standard', rows: 0, cols: 0, rowPrices: {} },
+    ]);
+  };
+
+  const removeTheaterForm = (index: number) => {
+    setTheaters((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -134,36 +193,12 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
               border border-white/20 
               rounded-xl p-6 w-[90%] max-w-lg text-white
               space-y-5 z-[9999]
+              max-h-[80vh] overflow-y-auto
             "
           >
             <h2 className="text-2xl font-bold text-movix-gold">
               เพิ่มโรงภาพยนตร์
             </h2>
-
-            {/* ชื่อโรง */}
-            <div>
-              <label>ชื่อโรง</label>
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full p-2 rounded bg-white/10 mt-1"
-                placeholder="เช่น โรง 1, Cinema Deluxe"
-              />
-            </div>
-
-            {/* ประเภทโรง */}
-            <div>
-              <label>ประเภทโรง</label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className="w-full p-2 rounded bg-white/10 mt-1"
-              >
-                <option value="Standard">Standard</option>
-                <option value="Premium">Premium</option>
-                <option value="IMAX">IMAX</option>
-              </select>
-            </div>
 
             {/* สาขา */}
             <div>
@@ -182,30 +217,118 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
               </select>
             </div>
 
-            {/* Row / Col */}
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label>จำนวนแถว (Row)</label>
-                <input
-                  type="number"
-                  value={rows}
-                  onChange={(e) => setRows(Number(e.target.value))}
-                  className="w-full p-2 rounded bg-white/10 mt-1"
-                  min={1}
-                />
-              </div>
+            {theaters.map((t, index) => (
+              <div
+                key={index}
+                className="mt-4 rounded-lg border border-white/15 bg-white/5 p-4 space-y-3"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <p className="font-semibold text-movix-gold">
+                    โรงที่ {index + 1}
+                  </p>
+                  {theaters.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeTheaterForm(index)}
+                      className="text-xs px-2 py-1 rounded bg-red-500/80 text-white hover:bg-red-600"
+                    >
+                      ลบโรงนี้
+                    </button>
+                  )}
+                </div>
 
-              <div>
-                <label>จำนวนที่นั่งต่อแถว (Col)</label>
-                <input
-                  type="number"
-                  value={cols}
-                  onChange={(e) => setCols(Number(e.target.value))}
-                  className="w-full p-2 rounded bg-white/10 mt-1"
-                  min={1}
-                />
+                <div>
+                  <label>ชื่อโรง</label>
+                  <input
+                    value={t.name}
+                    onChange={(e) =>
+                      handleTheaterChange(index, 'name', e.target.value)
+                    }
+                    className="w-full p-2 rounded bg-white/10 mt-1"
+                    placeholder="เช่น โรง 1, Cinema Deluxe"
+                  />
+                </div>
+
+                <div>
+                  <label>ประเภทโรง</label>
+                  <select
+                    value={t.type}
+                    onChange={(e) =>
+                      handleTheaterChange(index, 'type', e.target.value)
+                    }
+                    className="w-full p-2 rounded bg-white/10 mt-1"
+                  >
+                    <option value="Standard">Standard</option>
+                    <option value="Premium">Premium</option>
+                    <option value="IMAX">IMAX</option>
+                  </select>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label>จำนวนแถว (Row)</label>
+                    <input
+                      type="number"
+                      value={t.rows}
+                      onChange={(e) =>
+                        handleTheaterChange(
+                          index,
+                          'rows',
+                          Number(e.target.value)
+                        )
+                      }
+                      className="w-full p-2 rounded bg-white/10 mt-1"
+                      min={1}
+                    />
+                  </div>
+
+                  <div>
+                    <label>จำนวนที่นั่งต่อแถว (Col)</label>
+                    <input
+                      type="number"
+                      value={t.cols}
+                      onChange={(e) =>
+                        handleTheaterChange(
+                          index,
+                          'cols',
+                          Number(e.target.value)
+                        )
+                      }
+                      className="w-full p-2 rounded bg-white/10 mt-1"
+                      min={1}
+                    />
+                  </div>
+                </div>
+
+                {Array.from({ length: t.rows }, (_, i) => {
+                  const label = String.fromCharCode(65 + i);
+                  return (
+                    <div className="flex items-center gap-2" key={label}>
+                      <label>ราคาแถว {label}</label>
+                      <input
+                        type="number"
+                        value={t.rowPrices[label] || 0}
+                        onChange={(e) =>
+                          handleTheaterChange(index, 'rowPrices', {
+                            ...t.rowPrices,
+                            [label]: Number(e.target.value),
+                          })
+                        }
+                        className="w-24 p-1 rounded bg-white/10"
+                      />
+                    </div>
+                  );
+                })}
               </div>
-            </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addTheaterForm}
+              className="mt-4 text-sm px-3 py-2 rounded bg-white/10 border border-dashed border-white/30 hover:bg-white/15"
+            >
+              + เพิ่มโรงอีก
+            </button>
 
             {/* button */}
             <div className="flex justify-end gap-3 pt-3">

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import * as Dialog from '@radix-ui/react-dialog';
 import SeatIcon from '../base/Icon';
-
+import Button from '../base/Button';
 interface Seat {
   seatRow: string;
   seatCol: string;
@@ -76,9 +76,9 @@ export default function TheaterDetail({ theater }: theater) {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className="px-4 py-2 bg-movix-gold text-black rounded-md">
+        <Button variant="primary" size="md">
           ดูผังที่นั่ง
-        </button>
+        </Button>
       </Dialog.Trigger>
 
       <Dialog.Portal>
@@ -142,21 +142,27 @@ export default function TheaterDetail({ theater }: theater) {
                               (a: Seat, b: Seat) =>
                                 Number(a.seatCol) - Number(b.seatCol)
                             )
-                            .map((s: Seat) => (
-                              <div
-                                key={s.seatNumber}
-                                className="
-                                  flex items-center justify-center
-                                  w-10 h-10
-                                  rounded-md
-                                  bg-white/10 backdrop-blur-md
-                                  border border-white/30
-                                  shadow-[0_0_6px_rgba(255,255,255,0.25)]
-                                "
-                              >
-                                <SeatIcon color="movix-red" />
-                              </div>
-                            ))}
+                            .map((s: Seat) => {
+                              const seatColor =
+                                s.seatType === 'VIP'
+                                  ? 'movix-gold'
+                                  : 'movix-red';
+                              return (
+                                <div
+                                  key={s.seatNumber}
+                                  className="
+                                    flex items-center justify-center
+                                    w-10 h-10
+                                    rounded-md
+                                    bg-white/10 backdrop-blur-md
+                                    border border-white/30
+                                    shadow-[0_0_6px_rgba(255,255,255,0.25)]
+                                  "
+                                >
+                                  <SeatIcon color={seatColor} />
+                                </div>
+                              );
+                            })}
                         </div>
 
                         {/* ชื่อแถวด้านขวา */}
@@ -172,9 +178,9 @@ export default function TheaterDetail({ theater }: theater) {
 
           <div className="flex justify-end mt-6">
             <Dialog.Close asChild>
-              <button className="px-4 py-2 bg-gray-500 text-white rounded-md">
+              <Button variant="danger" size="md">
                 ปิด
-              </button>
+              </Button>
             </Dialog.Close>
           </div>
         </Dialog.Content>
