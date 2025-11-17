@@ -24,7 +24,7 @@ const ManageTheaters = () => {
   const [theaters, setTheaters] = useState<Theater[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
 
-  // 📌 โหลดข้อมูลโรงทั้งหมด
+  // โหลดข้อมูลโรงทั้งหมด
   const loadTheaters = async () => {
     try {
       const res = await axios.get(
@@ -66,7 +66,7 @@ const ManageTheaters = () => {
         <AddTheater onSuccess={loadTheaters} />
       </div>
 
-      {/* 📌 Table Layout */}
+      {/* Table Layout */}
       <div className="space-y-4">
         {theaters.map((th) => (
           <div
@@ -81,7 +81,7 @@ const ManageTheaters = () => {
                 </p>
                 <p className="text-white/70 text-sm">🎥 {th.type}</p>
                 <p className="text-white/70 text-sm">
-                  🪑 {th.rows} แถว × {th.cols} ที่นั่ง
+                  {th.rows} แถว × {th.cols} ที่นั่ง
                 </p>
               </div>
 
