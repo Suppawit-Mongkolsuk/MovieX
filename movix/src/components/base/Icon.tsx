@@ -13,7 +13,7 @@ export default function SeatIcon({
   const finalColor =
     color ||
     (type === 'vip'
-      ? 'purple-400' // VIP = ม่วง
+      ? 'movix-gold' // VIP = ม่วง
       : 'movix-red'); // Standard = แดง (ค่าเดิม)
 
   return (
