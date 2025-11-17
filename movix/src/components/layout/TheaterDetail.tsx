@@ -146,9 +146,7 @@ export default function TheaterDetail({ theater }: theater) {
                             )
                             .map((s: Seat) => {
                               const seatColor =
-                                s.seatType === 'VIP'
-                                  ? 'movix-gold'
-                                  : 'movix-red';
+                                s.seatType === 'VIP' ? '#FFD700' : '#E50914';
                               return (
                                 <div
                                   key={s.seatNumber}

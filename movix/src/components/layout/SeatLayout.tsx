@@ -113,14 +113,12 @@ export default function SeatLayout({ theater, onSelectChange }: TheaterProps) {
                       }`}
                     >
                       {s.selected ? (
-                        <span className="text-green-400  w-6 h-6 flex items-center justify-center text-2xl ">
+                        <span className="text-green-400  w-8 h-8 flex items-center justify-center text-2xl ">
                           ✓
                         </span>
                       ) : (
                         <SeatIcon
-                          color={
-                            s.seatType === 'VIP' ? 'movix-gold' : 'movix-red'
-                          }
+                          color={s.seatType === 'VIP' ? '#FFD700' : '#E50914'}
                           className="w-8 h-8 opacity-80"
                         />
                       )}
