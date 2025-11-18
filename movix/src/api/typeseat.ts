@@ -5,4 +5,5 @@ export type Seat = {
   seatType?: string;
   seatPrice?: number;
   selected?: boolean;
+  booked?: boolean;
 };

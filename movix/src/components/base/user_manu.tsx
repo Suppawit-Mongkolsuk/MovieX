@@ -18,7 +18,7 @@ export default function UserMenu() {
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
         const loggedInUser = (res.data as User[]).find(
-          (u) => u.isLogin === true
+          (user: User) => user.isLogin === true
         );
         setUser(loggedInUser || null);
       } catch (error) {

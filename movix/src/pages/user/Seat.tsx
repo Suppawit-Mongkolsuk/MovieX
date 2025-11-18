@@ -1,10 +1,11 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import SeatLayout from '../../components/layout/SeatLayout';
 import SeatSummary from '../../components/layout/SeatSummary';
 import type { Seat } from '../../api/typeseat';
+import type { User } from '../../api/typeuser';
 interface Showtime {
   id: string;
   movieID: string;
@@ -34,6 +35,7 @@ interface Theater {
 }
 export default function Seat() {
   const { showtimeId } = useParams();
+  const navigate = useNavigate();
 
   const [showtime, setShowtime] = useState<Showtime | null>(null);
   const [movie, setMovie] = useState<Movie | null>(null);
@@ -41,6 +43,7 @@ export default function Seat() {
   const [theater, setTheater] = useState<Theater | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const load = async () => {
@@ -76,6 +79,21 @@ export default function Seat() {
 
     load();
   }, [showtimeId]);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(
+          'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
+        );
+        const logged = res.data.find((u: User) => u.isLogin === true);
+        setIsLoggedIn(!!logged);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUser();
+  }, []);
 
   if (loading || !showtime || !movie || !location || !theater) {
     return <div></div>;
@@ -143,9 +161,28 @@ export default function Seat() {
         <SeatLayout
           theater={theater}
           onSelectChange={(selected) => setSelectedSeats(selected)}
+          showtimeId={showtime.id}
         />
 
-        <SeatSummary selectedSeats={selectedSeats} />
+        <SeatSummary
+          selectedSeats={selectedSeats}
+          onProceedToPayment={() =>
+            navigate('/payment', {
+              state: {
+                selectedSeats,
+                showtime,
+                movie,
+                location,
+                theater,
+                totalPrice: selectedSeats.reduce(
+                  (sum, s) => sum + Number(s.seatPrice || 0),
+                  0
+                ),
+              },
+            })
+          }
+          isLoggedIn={isLoggedIn}
+        />
       </div>
     </div>
   );

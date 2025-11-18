@@ -9,6 +9,7 @@ interface Seat {
   seatType?: string;
   seatPrice?: number;
   selected?: boolean;
+  booked?: boolean;
 }
 
 interface TheaterProps {
@@ -21,14 +22,20 @@ interface TheaterProps {
     locationId?: string;
     type?: string;
   };
+  showtimeId: string;
   onSelectChange?: (selected: Seat[]) => void;
 }
 
 interface TheaterSeatItem {
+  id: string;
   seat: Seat[];
 }
 
-export default function SeatLayout({ theater, onSelectChange }: TheaterProps) {
+export default function SeatLayout({
+  theater,
+  showtimeId,
+  onSelectChange,
+}: TheaterProps) {
   const [seats, setSeats] = useState<Seat[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,11 +46,30 @@ export default function SeatLayout({ theater, onSelectChange }: TheaterProps) {
           `https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats?TheaterId=${theater.id}`
         );
 
-        const allSeats = (res.data as TheaterSeatItem[]).flatMap(
-          (item) => item.seat
+        let bookedSeats: Seat[] = [];
+        try {
+          const bookedRes = await axios.get(
+            `https://68f0fcef0b966ad50034f883.mockapi.io/seats?showtimeId=${showtimeId}`
+          );
+          bookedSeats = bookedRes.data || [];
+        } catch {
+          bookedSeats = [];
+        }
+
+        const allSeats = (res.data as TheaterSeatItem[]).flatMap((item) =>
+          item.seat.map((s, index) => ({
+            ...s,
+            id: `${theater.id || item.id}-${index}`, // เพิ่ม id ให้ seat แบบอัตโนมัติ
+          }))
         );
 
-        setSeats(allSeats);
+        const mergedSeats = allSeats.map((seat) => {
+          const isBooked = bookedSeats.some(
+            (b: Seat) => b.seatNumber === seat.seatNumber
+          );
+          return { ...seat, booked: isBooked };
+        });
+        setSeats(mergedSeats);
         setLoading(false);
       } catch (err) {
         console.error('LOAD SEATS ERROR', err);
@@ -52,7 +78,7 @@ export default function SeatLayout({ theater, onSelectChange }: TheaterProps) {
     };
 
     loadSeats();
-  }, [theater.id]);
+  }, [theater.id, showtimeId]);
 
   // Group rows
   const rows = seats.reduce<Record<string, Seat[]>>((acc, seat) => {
@@ -106,8 +132,11 @@ export default function SeatLayout({ theater, onSelectChange }: TheaterProps) {
                           onSelectChange(updated.filter((x) => x.selected));
                         }
                       }}
+                      disabled={s.booked}
                       className={`p-1 rounded-md ${
-                        s.selected
+                        s.booked
+                          ? 'bg-gray-500 cursor-not-allowed'
+                          : s.selected
                           ? 'bg-white/30'
                           : 'bg-white/10 hover:bg-white/20'
                       }`}

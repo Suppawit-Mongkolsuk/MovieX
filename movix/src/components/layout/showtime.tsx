@@ -49,8 +49,24 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
         );
         setShowtimes(resShowtime.data);
 
-        if (resShowtime.data.length > 0) {
-          setSelectedDate(resShowtime.data[0].date);
+        // เลือกวันที่แรกที่ >= วันนี้ โดยอัตโนมัติ
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const upcomingDates: string[] = [
+          ...new Set<string>(
+            resShowtime.data
+              .filter((st: Showtime) => {
+                const d = new Date(st.date);
+                d.setHours(0, 0, 0, 0);
+                return d >= today;
+              })
+              .map((st: Showtime) => st.date)
+          ),
+        ].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+        if (upcomingDates.length > 0) {
+          setSelectedDate(upcomingDates[0]);
         }
 
         const resLocation = await axios.get(
@@ -70,8 +86,22 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
     fetchData();
   }, [movieId]);
 
-  // วันทั้งหมด
-  const uniqueDates = [...new Set(showtimes.map((st) => st.date))];
+  // วันปัจจุบัน (ใช้เที่ยงคืนเพื่อตัดเวลา)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // วันทั้งหมด (เอาเฉพาะวันที่ >= วันนี้)
+  const uniqueDates: string[] = [
+    ...new Set(
+      showtimes
+        .filter((st) => {
+          const d = new Date(st.date);
+          d.setHours(0, 0, 0, 0);
+          return d >= today;
+        })
+        .map((st) => st.date as string)
+    ),
+  ].sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   // filter ตามวันที่เลือก
   const filtered = showtimes.filter((st) => st.date === selectedDate);
@@ -123,7 +153,7 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
           </h3>
 
           <div className="space-y-8">
-            {/* ⭐ Group แยกตามโรงแบบ type-safe แล้ว */}
+            {/*  Group แยกตามโรงแบบ type-safe แล้ว */}
             {Object.entries(
               shows.reduce<GroupedMap>((acc, st) => {
                 if (!acc[st.theaterId]) {
@@ -149,21 +179,32 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
                 </p>
 
                 <div className="flex flex-wrap gap-3">
-                  {data.times.map((t, index) => (
-                    <button
-                      key={theaterId + t + index}
-                      onClick={() => navigate(`/seat/${data.showIds[index]}`)}
-                      className="
-                        px-4 py-2 rounded-full
-                        bg-gradient-to-b from-white/15 to-white/5
-                        border border-white/20
-                        text-white/90 text-sm font-medium
-                        hover:bg-movix-gold hover:text-black transition
-                      "
-                    >
-                      {t}
-                    </button>
-                  ))}
+                  {data.times.map((t, index) => {
+                    const showDateTime = new Date(`${selectedDate} ${t}`);
+                    const now = new Date();
+                    const isPast = showDateTime < now;
+
+                    return (
+                      <button
+                        key={theaterId + t + index}
+                        disabled={isPast}
+                        onClick={() => {
+                          if (isPast) return;
+                          navigate(`/seat/${data.showIds[index]}`);
+                        }}
+                        className={`
+                          px-4 py-2 rounded-full text-sm font-medium transition border
+                          ${
+                            isPast
+                              ? 'bg-gray-500/30 text-gray-400 border-gray-600 cursor-not-allowed'
+                              : 'bg-gradient-to-b from-white/15 to-white/5 border-white/20 text-white/90 hover:bg-movix-gold hover:text-black'
+                          }
+                        `}
+                      >
+                        {t}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             ))}
