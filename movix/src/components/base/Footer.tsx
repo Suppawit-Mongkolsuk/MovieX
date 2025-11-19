@@ -1,11 +1,16 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaLine } from "react-icons/fa";
+import React from 'react';
+import { motion } from 'framer-motion';
+import {
+  FaFacebook,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaLine,
+} from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-black/80 text-white py-8 flex flex-col items-center justify-center gap-6 border-t border-white/10 backdrop-blur-md shadow-inner">
-      
       {/* Call Center */}
       <motion.h2
         className="text-lg font-semibold text-gray-200"
@@ -13,7 +18,7 @@ const Footer: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        📞 <span className="text-white">MovieX Call Center:</span>{" "}
+        📞 <span className="text-white">MovieX Call Center:</span>{' '}
         <span className="text-red-500 font-bold">1919</span>
       </motion.h2>
 
@@ -24,7 +29,7 @@ const Footer: React.FC = () => {
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, color: "#1877F2" }}
+          whileHover={{ scale: 1.2, color: '#1877F2' }}
           transition={{ duration: 0.3 }}
           className="hover:drop-shadow-[0_0_6px_#1877F2]"
         >
@@ -36,7 +41,7 @@ const Footer: React.FC = () => {
           href="https://twitter.com"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, color: "#1DA1F2" }}
+          whileHover={{ scale: 1.2, color: '#1DA1F2' }}
           transition={{ duration: 0.3 }}
           className="hover:drop-shadow-[0_0_6px_#1DA1F2]"
         >
@@ -48,7 +53,7 @@ const Footer: React.FC = () => {
           href="https://instagram.com"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, color: "#E4405F" }}
+          whileHover={{ scale: 1.2, color: '#E4405F' }}
           transition={{ duration: 0.3 }}
           className="hover:drop-shadow-[0_0_6px_#E4405F]"
         >
@@ -60,7 +65,7 @@ const Footer: React.FC = () => {
           href="https://youtube.com"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, color: "#FF0000" }}
+          whileHover={{ scale: 1.2, color: '#FF0000' }}
           transition={{ duration: 0.3 }}
           className="hover:drop-shadow-[0_0_6px_#FF0000]"
         >
@@ -72,7 +77,7 @@ const Footer: React.FC = () => {
           href="https://line.me"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.2, color: "#00C300" }}
+          whileHover={{ scale: 1.2, color: '#00C300' }}
           transition={{ duration: 0.3 }}
           className="hover:drop-shadow-[0_0_6px_#00C300]"
         >
