@@ -43,6 +43,7 @@ const RegisterForm: React.FC = () => {
       }, 700); // .. วิระหว่าง fade
     }, 4500); // ทุก .. วิ
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -71,6 +72,7 @@ const RegisterForm: React.FC = () => {
     const thaiRegex = /[ก-๙]/;
     const validEmailChars = /^[A-Za-z0-9@._-]+$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const gmailPattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/i;
 
     if (thaiRegex.test(email)) {
       setError('⚠️ ห้ามกรอกอักษรภาษาไทยในอีเมล');
@@ -88,6 +90,12 @@ const RegisterForm: React.FC = () => {
     }
     if (!emailPattern.test(email)) {
       setError('⚠️ กรุณากรอกอีเมลให้ครบ เช่น example@gmail.com');
+      setShake(false);
+      setTimeout(() => setShake(true), 0);
+      return;
+    }
+    if (!gmailPattern.test(email)) {
+      setError('⚠️ ใช้อีเมล Gmail เท่านั้น เช่น example@gmail.com');
       setShake(false);
       setTimeout(() => setShake(true), 0);
       return;
@@ -123,8 +131,12 @@ const RegisterForm: React.FC = () => {
       });
       alert('สมัครสมาชิกสำเร็จ!');
       navigate('/login'); // กลับไปหน้า Login หลังสมัครเสร็จ
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'สมัครไม่สำเร็จ');
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.message || 'สมัครไม่สำเร็จ');
+      } else {
+        setError('สมัครไม่สำเร็จ');
+      }
     }
 
     setTimeout(() => setShake(false), 500);

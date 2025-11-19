@@ -4,6 +4,7 @@ import PasswordInput from './PasswordInput';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import type { User } from '../../api/typeuser';
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ const LoginForm: React.FC = () => {
     }, 4500); // ทุก .. วิ
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -68,7 +70,7 @@ const LoginForm: React.FC = () => {
 
       // ค้นหาผู้ใช้ที่อีเมลและรหัสผ่านตรงกัน
       const foundUser = users.find(
-        (u: any) => u.gmail === email && u.pass === password
+        (u: User) => u.gmail === email && u.pass === password
       );
 
       if (foundUser) {

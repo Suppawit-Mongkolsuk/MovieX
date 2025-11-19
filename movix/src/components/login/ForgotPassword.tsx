@@ -3,6 +3,7 @@ import { Mail } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import type { User } from '../../api/typeuser';
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -42,6 +43,7 @@ const ForgotPasswordForm: React.FC = () => {
       }, 700);
     }, 4500);
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,7 +64,7 @@ const ForgotPasswordForm: React.FC = () => {
       const users = res.data;
 
       // ✅ 2. หาผู้ใช้ที่อีเมลตรงกับที่กรอก
-      const foundUser = users.find((u: any) => u.gmail === email);
+      const foundUser = users.find((u: User) => u.gmail === email);
 
       if (foundUser) {
         // ✅ 3. ถ้าพบอีเมล ให้ถามรหัสผ่านใหม่
