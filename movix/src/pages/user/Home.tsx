@@ -5,7 +5,7 @@ import Card from '../../components/base/Card';
 import { getMovies } from '../../api/movies';
 import type { Movie } from '../../api/typeMovie';
 import { Link } from 'react-router-dom';
-import Footer from '../../components/login/Footer';
+import Footer from '../../components/base/Footer';
 
 function Home() {
   const [movies, setGetMovies] = useState<Movie[]>([]); // ✅ สร้าง state เก็บ array หนัง
