@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavbarAdmin } from '../../components/base/NavbarAdmin';
 import AddTheater from '../../components/layout/AddTheater';
-import TheaterDetail from '../../components/layout/TheaterDetail';
 import EditTheaterButton from '../../components/layout/EditTheaterButton';
 import DeleteTheaterButton from '../../components/layout/DeleteTheaterButton';
 import axios from 'axios';
@@ -120,7 +119,6 @@ const ManageTheaters = () => {
 
               <div className="flex gap-2 mt-4 sm:mt-0">
                 {/* ปุ่มแต่ละตัวเรียกใช้งาน component ย่อย ทั้งดูรายละเอียด/แก้ไข/ลบ */}
-                <TheaterDetail theater={th} />
                 <EditTheaterButton theater={th} onSuccess={loadTheaters} />
                 <DeleteTheaterButton
                   theaterId={th.id}
