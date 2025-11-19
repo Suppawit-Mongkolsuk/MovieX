@@ -12,8 +12,8 @@ interface EditMovieProps {
 }
 
 export default function EditMovie({ movie, onUpdated }: EditMovieProps) {
-  const [open, setOpen] = useState(false);
-  const [editedMovie, setEditedMovie] = useState(movie);
+  const [open, setOpen] = useState(false); // เปิด/ปิด dialog
+  const [editedMovie, setEditedMovie] = useState(movie); // state เก็บค่า form ปัจจุบัน
 
   // บันทึกข้อมลู
   const handleSave = async () => {
@@ -134,7 +134,7 @@ export default function EditMovie({ movie, onUpdated }: EditMovieProps) {
               </select>
             </div>
             <div className="md:w-[260px] w-full flex flex-col items-center md:items-center">
-              {/* 📸 Upload poster (เชื่อมกับ UploadImage) */}
+              {/* 📸 Upload poster (เชื่อมกับ UploadImage) อัปเดต state poster อัตโนมัติ */}
               <UploadImage
                 label="อัปโหลดโปสเตอร์ใหม่ (ถ้ามี)"
                 onUpload={(url) =>

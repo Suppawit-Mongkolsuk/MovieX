@@ -36,11 +36,13 @@ interface GroupedByDate {
 }
 
 export default function ManageShowtime() {
+  // state หลัก: รายการรอบฉาย + ข้อมูลอ้างอิง (หนัง/สาขา/โรง)
   const [showtimes, setShowtimes] = useState<Showtime[]>([]);
   const [moviesData, setMoviesData] = useState<Movie[]>([]);
   const [locationsData, setLocationsData] = useState<Location[]>([]);
   const [theatersData, setTheatersData] = useState<Theater[]>([]);
 
+  // ดึงข้อมูลทุกชุดพร้อมกันเพื่อลดจำนวน request
   const loadMasterData = async () => {
     const [m, l, t, s] = await Promise.all([
       axios.get('https://68f0fcef0b966ad50034f883.mockapi.io/movies'),
@@ -58,6 +60,7 @@ export default function ManageShowtime() {
   useEffect(() => {
     loadMasterData();
 
+    // รีเซ็ตสถานะโรงหนังอัตโนมัติเมื่อไม่มีรอบทับซ้อน (กันโรงค้างสถานะ busy)
     const resetTheaterStatus = async () => {
       try {
         const [showRes, thRes] = await Promise.all([
@@ -111,6 +114,7 @@ export default function ManageShowtime() {
         {/* แสดงแบบจัดกลุ่ม */}
         <div className="space-y-8 mt-6 w-full">
           {moviesData.map((movie) => {
+            // เอารอบฉายที่ตรงกับหนังนี้เท่านั้น
             const movieShowtimes = showtimes.filter(
               (st) => st.movieID === movie.movieID
             );
@@ -128,6 +132,7 @@ export default function ManageShowtime() {
                 </div>
 
                 {locationsData.map((loc) => {
+                  // ต่อด้วยกรองสาขาให้ตรงกับ location ปัจจุบัน
                   const locST = movieShowtimes.filter(
                     (st) => st.locationId === loc.id
                   );
@@ -140,6 +145,7 @@ export default function ManageShowtime() {
                       </h3>
 
                       {theatersData.map((th) => {
+                        // กรองตามโรงอีกชั้น (movie + location + theater)
                         const thST = locST.filter(
                           (st) => st.theaterId === th.id
                         );
@@ -189,6 +195,7 @@ export default function ManageShowtime() {
                                     </div>
 
                                     <div className="flex gap-2 flex-wrap justify-center sm:justify-start flex-1">
+                                      {/* แสดงเวลาฉายทั้งหมดของวันที่เดียวกัน */}
                                       {data.times.map(
                                         (t: string, index: number) => (
                                           <span

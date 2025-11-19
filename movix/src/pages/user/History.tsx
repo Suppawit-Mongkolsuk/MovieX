@@ -21,10 +21,12 @@ interface Booking {
 }
 
 const History = () => {
+  // เก็บข้อมูลประวัติการจอง + user ที่ล็อกอินอยู่ตอนนี้
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // ดึง user ที่ isLogin === true จาก MockAPI
     const fetchUser = async () => {
       try {
         const res = await axios.get(
@@ -43,6 +45,7 @@ const History = () => {
 
   useEffect(() => {
     if (!user) return;
+    // เมื่อรู้ user แล้วค่อยโหลด booking เฉพาะของเขา
     const load = async () => {
       try {
         const res = await axios.get(
@@ -122,6 +125,7 @@ const History = () => {
                       {booking.totalPrice} THB
                     </span>
                   </p>
+                  {/* ปุ่มแสดง QR code ของตั๋วใบนี้ */}
                   <Dialog.Root>
                     <Dialog.Trigger asChild>
                       <button className="mt-4 bg-yellow-500 text-black px-3 py-2 rounded-lg hover:bg-yellow-400 transition shadow-md w-fit">
@@ -137,6 +141,7 @@ const History = () => {
                         <h2 className="text-lg font-semibold mb-4 text-black">
                           ตั๋วภาพยนตร์
                         </h2>
+                        {/* ใช้ API สร้างรูป QR แล้ว encode ข้อมูล booking เข้าไป */}
                         <img
                           src={`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(
                             JSON.stringify({

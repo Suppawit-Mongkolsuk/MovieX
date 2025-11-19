@@ -20,7 +20,7 @@ export default function SeatSummary({
   const totalPrice = selectedSeats.reduce(
     (sum, s) => sum + Number(s.seatPrice || 0),
     0
-  );
+  ); // คำนวณราคารวมจากที่นั่งที่เลือกไว้
 
   const handleButtonClick = () => {
     if (onProceedToPayment) {

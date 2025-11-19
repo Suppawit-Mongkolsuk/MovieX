@@ -5,6 +5,7 @@ import { IoMdMenu } from 'react-icons/io';
 import ResponsiveAdmin from './responsive_navbarAdmin';
 
 export function NavbarAdmin() {
+  // state สำหรับเปิด/ปิดเมนู mobile
   const [open, setopen] = useState(false);
 
   return (

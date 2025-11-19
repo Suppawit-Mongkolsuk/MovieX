@@ -10,6 +10,7 @@ import DeleteMovie from '../../components/layout/DeleteMovie';
 import FilterDropdown from '../../components/layout/FilterDropdown';
 
 const ManageMovie = () => {
+  // movies = หลังผ่านตัวกรองแล้ว, allMovies = ข้อมูลเต็มเพื่อใช้ reset filter
   const [movies, setMovies] = useState<Movie[]>([]);
   const [allMovies, setAllMovies] = useState<Movie[]>([]); // เก็บข้อมูลไว้กรอง
   const [filterStatus, setFilterStatus] = useState('ทั้งหมด'); //<'All'>
@@ -30,6 +31,7 @@ const ManageMovie = () => {
   };
 
   // เรียก fetchMovies ตอนเปิดหน้า
+  // โหลดข้อมูลทันทีเมื่อเข้าหน้านี้ เพื่อให้ตารางมีข้อมูลล่าสุด
   useEffect(() => {
     fetchMovies();
   }, []);
@@ -106,6 +108,7 @@ const ManageMovie = () => {
                   <td className="px-4 py-3 text-center">{movie.status}</td>
                   <td className="px-4 py-3 text-center  ">
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-3">
+                      {/* ปุ่มแก้ไข/ลบจะเรียก fetchMovies ซ้ำเพื่อรีเฟรชข้อมูล */}
                       <EditMovie movie={movie} onUpdated={fetchMovies} />
                       <DeleteMovie
                         movieId={movie.id}

@@ -33,8 +33,8 @@ type GroupedMap = Record<
 >;
 
 export default function ShowtimeSection({ movieId }: { movieId: string }) {
-  const [showtimes, setShowtimes] = useState<Showtime[]>([]);
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [showtimes, setShowtimes] = useState<Showtime[]>([]); // raw showtime ทั้งหมดของหนัง
+  const [selectedDate, setSelectedDate] = useState<string>(''); // วันที่ที่เลือกอยู่
   const [locations, setLocations] = useState<Location[]>([]);
   const [theatersData, setTheatersData] = useState<Theater[]>([]);
 
@@ -106,7 +106,7 @@ export default function ShowtimeSection({ movieId }: { movieId: string }) {
   // filter ตามวันที่เลือก
   const filtered = showtimes.filter((st) => st.date === selectedDate);
 
-  // group ตาม location
+  // group ตาม location เพื่อใช้แสดง card แยกสาขา
   const grouped: Record<string, Showtime[]> = {};
   filtered.forEach((st) => {
     if (!grouped[st.locationId]) grouped[st.locationId] = [];

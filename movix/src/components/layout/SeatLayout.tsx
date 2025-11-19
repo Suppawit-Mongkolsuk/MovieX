@@ -36,7 +36,7 @@ export default function SeatLayout({
   showtimeId,
   onSelectChange,
 }: TheaterProps) {
-  const [seats, setSeats] = useState<Seat[]>([]);
+  const [seats, setSeats] = useState<Seat[]>([]); // เก็บที่นั่งทั้งหมดของโรงนี้
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -121,6 +121,7 @@ export default function SeatLayout({
                       <button
                         key={s.seatNumber}
                         onClick={() => {
+                          // toggle สถานะ selected ของเก้าอี้แล้วกระจายผลกลับไปให้ parent
                           const updated = seats.map((seat) =>
                             seat.seatNumber === s.seatNumber
                               ? { ...seat, selected: !seat.selected }

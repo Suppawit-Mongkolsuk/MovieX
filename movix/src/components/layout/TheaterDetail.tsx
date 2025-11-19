@@ -27,7 +27,7 @@ interface TheaterSeatItem {
 }
 
 export default function TheaterDetail({ theater }: theater) {
-  const [seats, setSeats] = useState<Seat[]>([]);
+  const [seats, setSeats] = useState<Seat[]>([]); // seat data จาก MockAPI
   const [loading, setLoading] = useState(true);
 
   // โหลดผังที่นั่งจาก MockAPI

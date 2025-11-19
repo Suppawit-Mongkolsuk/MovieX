@@ -18,7 +18,7 @@ interface TheaterForm {
 }
 
 export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // toggle dialog
 
   const [locationId, setLocationId] = useState('');
   const [theaters, setTheaters] = useState<TheaterForm[]>([
@@ -29,7 +29,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
       cols: 0,
       rowPrices: {},
     },
-  ]);
+  ]); // อนุญาตเพิ่มหลายโรงใน batch เดียว
 
   // location list
   const [locations, setLocations] = useState<Location[]>([]);
@@ -94,12 +94,12 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
       }
     }
 
-    const loadingId = toast.loading('กำลังสร้างโรงหลายโรง...');
+    const loadingId = toast.loading('กำลังสร้างโรงหลายโรง...'); // เก็บ id ไว้ dismiss ทีหลัง
 
     try {
       // loop ทีละโรง
       for (const t of theaters) {
-        // 1) POST โรงใหม่
+        // POST โรงใหม่
         const res = await axios.post(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Theater',
           {
@@ -115,10 +115,10 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
 
         const theaterId = res.data.id;
 
-        // 2) generate seats ตาม rows/cols ของโรงนั้น ๆ
+        // generate seats ตาม rows/cols ของโรงนั้น ๆ
         const seats = generateSeats(theaterId, t.rows, t.cols, t.rowPrices);
 
-        // 3) ส่งเก้าอี้ทุกตัวขึ้น MockAPI เป็น array เดียว
+        // ส่งเก้าอี้ทุกตัวขึ้น MockAPI เป็น array เดียว
         await axios.post(
           'https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats',
           {
@@ -146,7 +146,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
       toast.error('สร้างโรงไม่สำเร็จ');
     }
   };
-
+  // ฟังก์ชันจัดการการเปลี่ยนแปลงข้อมูลฟอร์มโรง
   const handleTheaterChange = (
     index: number,
     field: keyof TheaterForm,
@@ -158,14 +158,14 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
       return copy;
     });
   };
-
+  // ฟังก์ชันเพิ่มฟอร์มโรงใหม่
   const addTheaterForm = () => {
     setTheaters((prev) => [
       ...prev,
       { name: '', type: 'Standard', rows: 0, cols: 0, rowPrices: {} },
     ]);
   };
-
+  // ฟังก์ชันลบฟอร์มโรง
   const removeTheaterForm = (index: number) => {
     setTheaters((prev) => prev.filter((_, i) => i !== index));
   };
@@ -213,7 +213,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
                 ))}
               </select>
             </div>
-
+            {/* ฟอร์มเพิ่มโรงหลายโรง */}
             {theaters.map((t, index) => (
               <div
                 key={index}
@@ -296,7 +296,7 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
                     />
                   </div>
                 </div>
-
+                {/* กำหนดราคาแต่ละแถว */}
                 {Array.from({ length: t.rows }, (_, i) => {
                   const label = String.fromCharCode(65 + i);
                   return (
@@ -330,13 +330,12 @@ export default function AddTheater({ onSuccess }: { onSuccess: () => void }) {
             {/* button */}
             <div className="flex justify-end gap-3 pt-3">
               <Dialog.Close asChild>
-                <Button className="bg-gray-600">ยกเลิก</Button>
+                <Button variant="danger" size="md">
+                  ยกเลิก
+                </Button>
               </Dialog.Close>
 
-              <Button
-                onClick={handleSubmit}
-                className="bg-movix-gold text-black px-6"
-              >
+              <Button onClick={handleSubmit} variant="primary" size="md">
                 สร้างโรง
               </Button>
             </div>

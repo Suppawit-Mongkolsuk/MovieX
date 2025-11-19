@@ -6,7 +6,8 @@ import UploadImage from '../base/UploadImage';
 import { toast } from 'react-toastify';
 
 export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
-  const [open, setOpen] = useState(false); //สำหรับเปิดปิด ppopup
+  // state คุม dialog + เก็บค่าฟอร์มหนังใหม่
+  const [open, setOpen] = useState(false); // สำหรับเปิดปิด popup
   const [newMovie, setNewMovie] = useState({
     title: '',
     trailer: '',
@@ -16,9 +17,9 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
     endDate: '',
     status: 'Coming Soon', // ปรับค่า default status ให้ตรงกับตอนเริ่มต้น
     poster: '',
-  }); // เก็บค่าหนัง
+  }); // เก็บค่าหนังทั้งหมดใน object เดียว
 
-  // 📤 ฟังก์ชันบันทึกหนังใหม่ลง MockAPI
+  // ฟังก์ชันบันทึกหนังใหม่ลง MockAPI และ refresh ตาราง
   const handleSave = async () => {
     try {
       console.log('🚀 เริ่มบันทึก:', newMovie);
@@ -37,7 +38,7 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
       );
       toast.success('เพิ่มหนังใหม่สำเร็จ ✅');
 
-      // เคลียร์ค่า form หลังเพิ่มเสร็จ
+      // เคลียร์ค่า form หลังเพิ่มเสร็จเพื่อพร้อมเพิ่มเรื่องใหม่
       setNewMovie({
         title: '',
         trailer: '',
@@ -50,7 +51,7 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
       });
 
       setOpen(false); // ปิด Dialog
-      onAdded(); // เรียก refresh ข้อมูลในตารางหลัก
+      onAdded(); // แจ้ง parent ให้ refresh ข้อมูลในตารางหลัก
     } catch (error) {
       console.error('เพิ่มหนังไม่สำเร็จ:', error);
       toast.error('เพิ่มหนังไม่สำเร็จ ❌');
@@ -147,7 +148,7 @@ export default function AddMovieDialog({ onAdded }: { onAdded: () => void }) {
               </select>
             </div>
             <div className="md:w-[260px] w-full flex flex-col items-center md:items-center">
-              {/* 📸 Upload poster (เชื่อมกับ UploadImage) */}
+              {/* Upload poster (เชื่อมกับ UploadImage) : auto=true = เลือกไฟล์แล้วอัปโหลดเลย */}
               <UploadImage
                 label="อัปโหลดโปสเตอร์ภาพยนตร์"
                 auto={true}

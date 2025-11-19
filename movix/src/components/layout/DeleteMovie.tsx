@@ -15,8 +15,8 @@ export default function DeleteMovie({
   title,
   onDeleted,
 }: DeleteMovieProps) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false); // toggle dialog
+  const [loading, setLoading] = useState(false); // ป้องกันกดซ้ำขณะลบ
 
   //  ฟังก์ชันลบข้อมูลหนัง
   const handleDelete = async () => {
@@ -27,7 +27,7 @@ export default function DeleteMovie({
       );
       toast.success(`ลบ "${title}" สำเร็จ!`);
       setOpen(false);
-      onDeleted(); // 🔁 เรียกฟังก์ชัน refresh ข้อมูล
+      onDeleted(); // 🔁 แจ้ง parent ให้รีโหลดตารางหนัง
     } catch (error) {
       console.error('❌ ลบไม่สำเร็จ:', error);
       toast.error('ลบข้อมูลหนังไม่สำเร็จ');

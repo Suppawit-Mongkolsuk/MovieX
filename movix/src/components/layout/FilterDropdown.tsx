@@ -14,7 +14,7 @@ export default function FilterDropdown({
   value,
   onChange,
 }: FilterDropdownProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // state สำหรับเปิดปิดเมนู
 
   return (
     <Dropdown.Root open={open} onOpenChange={setOpen}>
@@ -48,7 +48,8 @@ export default function FilterDropdown({
                 onSelect={() => onChange(valueItem)}
                 className="px-4 py-2 rounded-md hover:bg-white/20 cursor-pointer flex items-center gap-2"
               >
-                {value === valueItem && <Check size={18} />}
+                {value === valueItem && <Check size={18} />}{' '}
+                {/* โชว์ icon เมื่อเป็นตัวที่ถูกเลือกอยู่ */}
                 <span>{label}</span>
               </Dropdown.Item>
             );

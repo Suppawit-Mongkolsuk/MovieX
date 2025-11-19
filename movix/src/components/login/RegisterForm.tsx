@@ -5,20 +5,24 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const RegisterForm: React.FC = () => {
+  // state ฟิลด์ข้อมูลที่ผู้ใช้ต้องกรอกเพื่อสมัคร
   const [phone, setPhone] = useState<string>('');
   const [email, setEmail] = useState('');
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // state สำหรับ error message + motion effect สั่นกล่องฟอร์ม
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
 
+  // state ที่ควบคุมการเปลี่ยนภาพพื้นหลังแบบ fade
   const [currentImage, setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
 
   const navigate = useNavigate();
 
+  // รายชื่อภาพพื้นหลังทั้งหมดที่นำมาวนโชว์
   const images = [
     '/src/assets/Bg1.jpg',
     '/src/assets/Bg2.jpg',
@@ -34,6 +38,7 @@ const RegisterForm: React.FC = () => {
     '/src/assets/Bg12.jpg',
   ];
 
+  // ตั้ง interval คอยเปลี่ยนภาพพื้นหลังทุก 4.5 วินาที
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
@@ -46,6 +51,7 @@ const RegisterForm: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ฟังก์ชัน submit: เช็ก validate และยิงข้อมูลไป MockAPI
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 

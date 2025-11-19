@@ -8,7 +8,7 @@ import UploadImage from './UploadImage';
 
 export default function UserMenu() {
   const [user, setUser] = useState<User | null>(null); // เก็บข้อมูล user ปัจจุบัน
-  const [openDialog, setOpenDialog] = useState(false); // เปิด/ปิด modal
+  const [openDialog, setOpenDialog] = useState(false); // เปิด/ปิด modal สำหรับอัปโหลดรูป
 
   // 🚀 ดึงข้อมูล user จาก MockAPI
   useEffect(() => {
@@ -17,6 +17,7 @@ export default function UserMenu() {
         const res = await axios.get(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
+        // ค้นหา user ที่ isLogin = true เพื่อเช็กสิทธิ์บน navbar
         const loggedInUser = (res.data as User[]).find(
           (user: User) => user.isLogin === true
         );
@@ -28,7 +29,7 @@ export default function UserMenu() {
     fetchUser();
   }, []);
 
-  // ออกจากระบบ
+  // ออกจากระบบเเละเปลี่ยนสถานะ isLogin แล้วรีโหลดหน้าเพื่อรีเซ็ต state ทั่ว app
   const handleLogout = async () => {
     if (!user) return;
     await axios.put(
@@ -41,7 +42,7 @@ export default function UserMenu() {
     // reload
     window.location.reload();
   };
-  // อัปโหลดรูปภาพใหม่
+  // อัปโหลดรูปภาพใหม่ -> เอา URL จาก UploadImage มาเซฟใน MockAPI
   const handleUploaded = async (url: string) => {
     if (!user) return;
     try {
@@ -117,6 +118,7 @@ export default function UserMenu() {
             className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 
             w-[90%] max-w-sm bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl shadow-xl p-6"
           >
+            {/* reuse UploadImage component แต่บังคับให้กดปุ่มอัปโหลดเอง (auto=false) */}
             <UploadImage
               label="อัปโหลดรูปโปรไฟล์"
               onUpload={handleUploaded}

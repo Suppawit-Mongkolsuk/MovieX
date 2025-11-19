@@ -11,6 +11,7 @@ function Home() {
   const [movies, setGetMovies] = useState<Movie[]>([]); // ✅ สร้าง state เก็บ array หนัง
 
   useEffect(() => {
+    // ดึงข้อมูลหนังทั้งหมดจาก MockAPI แล้วเก็บใน state
     const loadMovies = async () => {
       const data = await getMovies(); // ✅ ดึงข้อมูลจาก MockAPI
       setGetMovies(data); // ✅ อัปเดต state
@@ -37,7 +38,7 @@ function Home() {
           .filter((m) => m.status === 'Now Showing')
           .map((movie) => (
             <Link to={`/moviedetail/${movie.movieID}`} key={movie.id}>
-              {/*เพิ่ม Link หนังตามid*/}
+              {/*เพิ่ม Link หนังตาม id เพื่อพาไปหน้า MovieDetail */}
               <Card
                 title={movie.title}
                 imageUrl={movie.poster}

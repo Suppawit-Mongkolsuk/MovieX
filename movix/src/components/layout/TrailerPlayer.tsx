@@ -5,6 +5,7 @@ interface TrailerPlayerProps {
 // เเปลงลิงก์วิดีโอเป็นรูปเเบบ embed
 const TrailerPlayer: React.FC<TrailerPlayerProps> = ({ url, title }) => {
   const getEmbedUrl = (url: string) => {
+    // รองรับทั้งลิงก์ youtu.be และ watch?v= แล้วแปลงเป็น embed URL
     if (!url) return '';
     if (url.includes('youtu.be')) {
       const videoId = url.split('youtu.be/')[1];
@@ -19,6 +20,7 @@ const TrailerPlayer: React.FC<TrailerPlayerProps> = ({ url, title }) => {
 
   const embedUrl = getEmbedUrl(url);
   return (
+    // ครอบ iframe ด้วย aspect-video เพื่อให้ responsive
     <div className="w-full aspect-video rounded-xl overflow-hidden shadow-lg">
       <iframe
         src={embedUrl}

@@ -17,24 +17,28 @@ export default function CardPaymentDialog({
   onOpenChange,
   onConfirm,
 }: CardPaymentDialogProps) {
+  // state สำหรับข้อมูลบัตรจำลอง + error แสดงใต้ฟอร์ม
   const [cardNumber, setCardNumber] = useState('');
   const [cardName, setCardName] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvv, setCvv] = useState('');
   const [error, setError] = useState('');
 
+  // helper format หมายเลขบัตร ใส่ช่องว่างทุก 4 ตัวอักษร
   const formatCardNumber = (value: string) =>
     value
       .replace(/\D/g, '')
       .slice(0, 16)
       .replace(/(\d{4})(?=\d)/g, '$1 ');
 
+  // helper format วันหมดอายุ -> MM/YY
   const formatExpiry = (value: string) => {
     const cleaned = value.replace(/\D/g, '').slice(0, 4);
     if (cleaned.length <= 2) return cleaned;
     return `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`;
   };
 
+  // ตรวจสอบความครบถ้วนก่อนยิง onConfirm (mock)
   const handleConfirm = () => {
     if (!cardNumber || !cardName || !expiry || !cvv) {
       setError('กรุณากรอกข้อมูลบัตรให้ครบถ้วน');
@@ -69,6 +73,7 @@ export default function CardPaymentDialog({
 
             <div className="flex flex-col gap-6 lg:flex-row">
               <div className="flex-1">
+                {/* การ์ด preview ด้านซ้าย: bind กับ state เพื่อให้เห็นผลทันที */}
                 <div className="relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-3xl bg-gradient-to-r from-[#0a0a0a] via-[#8b0000] to-[#f2c94c] p-5 text-white shadow-inner">
                   <div className="flex justify-between text-xs uppercase tracking-[0.4em] text-white/70">
                     <span>MOVIX</span>

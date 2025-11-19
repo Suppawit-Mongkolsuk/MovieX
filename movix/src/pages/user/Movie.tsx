@@ -6,9 +6,11 @@ import Card from '../../components/base/Card';
 import { Link } from 'react-router-dom';
 
 function Movies() {
+  // state เก็บรายการหนังทั้งหมด (ใช้ร่วมกับหน้า Now Showing)
   const [movies, setmovies] = useState<Movie[]>([]);
 
   useEffect(() => {
+    // โหลดข้อมูลจาก MockAPI ครั้งเดียวเมื่อเข้าหน้า
     const loadMovies = async () => {
       const data = await getMovies();
       setmovies(data);
@@ -26,6 +28,7 @@ function Movies() {
           .filter((m) => m.status === 'Now Showing')
           .map((movie) => (
             <Link to={`/moviedetail/${movie.movieID}`} key={movie.id}>
+              {/* คลิกแล้วนำทางไปหน้า MovieDetail พร้อม movieID */}
               <Card
                 title={movie.title}
                 imageUrl={movie.poster}

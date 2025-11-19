@@ -24,6 +24,7 @@ interface Location {
 }
 
 const ManageTheaters = () => {
+  // theaters = รายการโรงทั้งหมด, locations = สาขาทั้งหมด, filterLocation = สาขาที่เลือก
   const [theaters, setTheaters] = useState<Theater[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [filterLocation, setFilterLocation] = useState('all');
@@ -52,6 +53,7 @@ const ManageTheaters = () => {
     }
   };
 
+  // โหลดข้อมูลโรงและสาขาทันทีเมื่อเข้าหน้า
   useEffect(() => {
     loadTheaters();
     loadLocations();
@@ -60,6 +62,7 @@ const ManageTheaters = () => {
   const getLocationName = (id: string) =>
     locations.find((l) => l.id === id)?.name || '-';
 
+  // เลือกเฉพาะโรงตามสาขาที่กำลังกรอง (ค่า all = แสดงทุกโรง)
   const filteredTheaters =
     filterLocation === 'all'
       ? theaters
@@ -116,6 +119,7 @@ const ManageTheaters = () => {
               </div>
 
               <div className="flex gap-2 mt-4 sm:mt-0">
+                {/* ปุ่มแต่ละตัวเรียกใช้งาน component ย่อย ทั้งดูรายละเอียด/แก้ไข/ลบ */}
                 <TheaterDetail theater={th} />
                 <EditTheaterButton theater={th} onSuccess={loadTheaters} />
                 <DeleteTheaterButton

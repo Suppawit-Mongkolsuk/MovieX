@@ -29,7 +29,7 @@ export default function EditTheaterButton({
   theater: Theater;
   onSuccess: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // คุม dialog แก้ไขโรง
 
   // โหลดค่าเริ่มต้นของโรง
   const [name, setName] = useState(theater.name);
@@ -46,7 +46,7 @@ export default function EditTheaterButton({
   }
 
   const [rowPrices, setRowPrices] =
-    useState<Record<string, number>>(initialPrices);
+    useState<Record<string, number>>(initialPrices); // mapping ราคาแยกตามแถว
 
   // โหลดราคาเก้าอี้เดิมมาใช้ตั้งต้น (ถ้ามี)
   useEffect(() => {
@@ -78,10 +78,10 @@ export default function EditTheaterButton({
 
   // บันทึกข้อมูล
   const handleEdit = async () => {
-    toast.loading('กำลังแก้ไขโรง...');
+    toast.loading('กำลังแก้ไขโรง...'); // แจ้งสถานะทันทีระหว่างรอ API
 
     try {
-      // 1) อัปเดตข้อมูลโรง
+      // 1) อัปเดตข้อมูลโรงหลัก (ชื่อ/ประเภท/rows/cols)
       await axios.put(
         `https://68f0fcef0b966ad50034f883.mockapi.io/Theater/${theater.id}`,
         {
@@ -111,11 +111,11 @@ export default function EditTheaterButton({
   // สร้างที่นั่งใหม่ตาม rows/cols + ราคาแถว
   const regenerateSeats = async (): Promise<void> => {
     const newSeats: Seat[] = [];
-
+    // สร้างที่นั่งใหม่ทั้งหมด
     for (let r = 0; r < rows; r++) {
       const rowLabel = alphabet[r];
       const price = rowPrices[rowLabel] || 0;
-
+      // สร้างที่นั่งในแถวนั้น
       for (let c = 1; c <= cols; c++) {
         newSeats.push({
           TheaterId: theater.id,
@@ -127,13 +127,13 @@ export default function EditTheaterButton({
         });
       }
     }
-
+    // อัปเดตที่นั่งทั้งหมดใน MockAPI
     await axios.put(
       `https://68f0fcef0b966ad50034f883.mockapi.io/theaterSeats/${theater.id}`,
       { seat: newSeats as Seat[] }
     );
   };
-
+  // UI ปุ่ม + dialog แก้ไข
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>

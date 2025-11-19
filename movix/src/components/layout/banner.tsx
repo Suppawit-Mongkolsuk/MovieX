@@ -3,6 +3,7 @@ import postter2 from '../../assets/porter2.png';
 import postter3 from '../../assets/porter3.png';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+// แบนเนอร์สไลด์โชว์
 const Banner = () => {
   return (
     <Carousel
@@ -28,8 +29,4 @@ const Banner = () => {
     </Carousel>
   );
 };
-
 export default Banner;
-<div className="max-w-{1440px] max-h-[500px] mx-auto oject-cover flex justify-center">
-  <img src={postter} alt=""></img>
-</div>;

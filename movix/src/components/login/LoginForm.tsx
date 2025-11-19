@@ -7,20 +7,25 @@ import axios from 'axios';
 import type { User } from '../../api/typeuser';
 
 const LoginForm: React.FC = () => {
+  // กลุ่ม state หลักของฟอร์ม login + effect
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // state สำหรับควบคุมข้อความแจ้งเตือนและ motion สั่น
   const [error, setError] = useState('');
   const [shake, setShake] = useState(false);
 
+  // state สำหรับภาพพื้นหลังสไลด์ (index + fade in/out)
   const [currentImage, setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
 
   const navigate = useNavigate();
+  // helper สำหรับพาไปหน้า Register ด้วยปุ่มด้านล่าง
   const goToRegister = () => {
     navigate('/register');
   };
 
+  // รวม path ของภาพทั้งหมดที่ใช้ random background
   const images = [
     '/src/assets/Bg1.jpg',
     '/src/assets/Bg2.jpg',
@@ -36,7 +41,8 @@ const LoginForm: React.FC = () => {
     '/src/assets/Bg12.jpg',
   ];
 
-  // ใช้ useEffect เพื่อเปลี่ยนภาพทุก 5 วิ พร้อมทำ transition
+  // ใช้ useEffect เพื่อเปลี่ยนภาพ background อัตโนมัติทุก 4.5 วิ พร้อม fade
+  // ตั้ง interval ให้ภาพพื้นหลังค่อย ๆ เปลี่ยนทุก 4.5 วินาที
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false); // เริ่ม fade out
@@ -50,6 +56,7 @@ const LoginForm: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ฟังก์ชันหลัก: ตรวจสอบข้อมูลและเรียก MockAPI เพื่อ login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -74,6 +81,7 @@ const LoginForm: React.FC = () => {
       );
 
       if (foundUser) {
+        // อัปเดต flag isLogin = true เพื่อบอกว่า user กำลังใช้งานอยู่
         await axios.put(
           `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${foundUser.id}`,
           {
@@ -127,7 +135,7 @@ const LoginForm: React.FC = () => {
 
       {/* กล่อง login form */}
       <motion.div
-        className="bg-white/10 backdrop-blur-xl border border-white/40 p-8 rounded-3xl shadow-lg w-full max-w-md"
+        className="bg-white/10 backdrop-blur-xl border border-white/40 p-8 m-4 rounded-3xl shadow-lg w-full max-w-md"
         animate={shake ? { x: [-8, 8, -6, 6, -4, 4, 0] } : { x: 0 }} // เอฟเฟกต์สั่น
         transition={{ duration: 0.4 }}
       >

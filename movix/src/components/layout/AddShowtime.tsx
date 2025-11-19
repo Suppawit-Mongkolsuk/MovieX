@@ -45,9 +45,7 @@ type TimeInputMap = {
 };
 
 export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
-  // ---------------------------------------------------------
-  // state หลัก
-  // ---------------------------------------------------------
+  // state หลัก คุม Dialog Add Showtime
   const [open, setOpen] = useState(false);
 
   // master data จาก MockAPI
@@ -65,7 +63,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   const [date, setDate] = useState('');
   const [enddate, setEnddate] = useState('');
 
-  // 🧠 Map เก็บเวลาแบบ "รายวัน × รายโรง"
+  //  Map เก็บเวลาแบบ "รายวัน × รายโรง"
   // เช่น {
   //   "2025-11-14": { "1": ["13:00","15:00"], "3": ["17:00"] },
   //   "2025-11-15": { "1": ["16:00"] }
@@ -75,9 +73,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
   // Map สำหรับเก็บค่า input ของแต่ละวัน×โรง (พิมพ์เอง + time picker)
   const [timeInputs, setTimeInputs] = useState<TimeInputMap>({});
 
-  // ---------------------------------------------------------
   // โหลดข้อมูลจาก MockAPI
-  // ---------------------------------------------------------
   useEffect(() => {
     const load = async () => {
       try {
@@ -97,7 +93,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
         setMovies(m.data);
         setLocations(l.data);
         setTheaters(t.data);
-        setShowtimes(s.data);
+        setShowtimes(s.data); // preload เพื่อกันการชนรอบ
       } catch (err) {
         console.error('โหลดข้อมูลล้มเหลว:', err);
         toast.error('โหลดข้อมูลไม่สำเร็จ');
@@ -107,9 +103,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     load();
   }, []);
 
-  // ---------------------------------------------------------
-  // Helper: generate ช่วงวันที่ เช่น 1–3 => ["2025-11-01","2025-11-02","2025-11-03"]
-  // ---------------------------------------------------------
+  // generate ช่วงวันที่ เช่น 1–3 => ["2025-11-01","2025-11-02","2025-11-03"]
+
   const generateRange = (start: string, end: string) => {
     const result: string[] = [];
     if (!start || !end) return result;
@@ -127,15 +122,14 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     return result;
   };
 
-  // ---------------------------------------------------------
   // toggle เลือกสาขา (checkbox)
-  // ---------------------------------------------------------
+
   const toggleLocation = (id: string) => {
     setSelectedLocationIds((prev) => {
       if (prev.includes(id)) {
         const next = prev.filter((x) => x !== id);
 
-        // เอาโรงที่อยู่ในสาขานั้นออกจาก selectedTheaterIds ด้วย
+        // เอาโรงที่อยู่ในสาขานั้นออกจาก selectedTheaterIds ด้วย เพื่อไม่ให้หลงเหลือโรงที่ไม่ได้โชว์
         setSelectedTheaterIds((prevTheaters) =>
           prevTheaters.filter((tid) => {
             const theater = theaters.find((t) => t.id === tid);
@@ -150,23 +144,20 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     });
   };
 
-  // ---------------------------------------------------------
   // toggle เลือกโรง (checkbox)
-  // ---------------------------------------------------------
+
   const toggleTheater = (id: string) => {
     setSelectedTheaterIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
-  // ---------------------------------------------------------
   // คำนวณว่าโรงไหนถูกใช้แล้วในช่วงวันที่เลือก (กันการชน)
-  // ---------------------------------------------------------
   let takenTheaters: string[] = [];
   if (date && enddate) {
     const days = generateRange(date, enddate);
     const overlap = showtimes.filter((st) => days.includes(st.date));
-    takenTheaters = overlap.map((st) => st.theaterId);
+    takenTheaters = overlap.map((st) => st.theaterId); // โรงที่มีรอบทับกันช่วงวันเดียวกัน
   }
 
   // filter โรงที่ status = active และไม่อยู่ใน takenTheaters
@@ -174,10 +165,9 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     (t) => t.status === 'active' && !takenTheaters.includes(t.id)
   );
 
-  // ---------------------------------------------------------
-  // 🎯 เมื่อ date / enddate / selectedTheaterIds เปลี่ยน
+  // เมื่อ date / enddate / selectedTheaterIds เปลี่ยน
   // ให้เตรียม dayTimeMap ให้มี key ครบ (แต่ไม่ลบเวลาที่มีอยู่แล้ว)
-  // ---------------------------------------------------------
+
   useEffect(() => {
     if (!date || !enddate || selectedTheaterIds.length === 0) {
       // ถ้ายังไม่ได้เลือกครบ เคลียร์ map ไปก่อน
@@ -222,9 +212,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     });
   }, [date, enddate, selectedTheaterIds]);
 
-  // ---------------------------------------------------------
   // วันที่แบบไทย
-  // ---------------------------------------------------------
+
   const formatDateTH = (d: string) => {
     if (!d) return d;
     try {
@@ -239,15 +228,13 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     }
   };
 
-  // ---------------------------------------------------------
   //  timeInputs
-  // ---------------------------------------------------------
+
   const makeInputKey = (dateStr: string, theaterId: string) =>
     `${dateStr}__${theaterId}`;
 
-  // ---------------------------------------------------------
   // เพิ่มเวลาให้ dayTimeMap จาก input (manual / picker)
-  // ---------------------------------------------------------
+
   const addTimeToDayTheater = (dateStr: string, theaterId: string) => {
     const key = makeInputKey(dateStr, theaterId);
     const input = timeInputs[key] || { manual: '', picker: '' };
@@ -288,9 +275,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     }));
   };
 
-  // ---------------------------------------------------------
   // ลบเวลา 1 ช่องออกจาก dayTimeMap
-  // ---------------------------------------------------------
+
   const removeTimeFromDayTheater = (
     dateStr: string,
     theaterId: string,
@@ -317,9 +303,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     });
   };
 
-  // ---------------------------------------------------------
   // helper: reset form
-  // ---------------------------------------------------------
+
   const resetForm = () => {
     setMovieId('');
     setSelectedLocationIds([]);
@@ -330,9 +315,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     setTimeInputs({});
   };
 
-  // ---------------------------------------------------------
   // กดสร้างรอบหนัง (แบบใหม่: loop จาก dayTimeMap)
-  // ---------------------------------------------------------
+
   const handleCreate = async () => {
     if (!movieId) {
       toast.error('กรุณาเลือกหนัง');
@@ -360,7 +344,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
       return;
     }
 
-    // 🔍 เช็คว่าทุกวันต้องมีเวลาอย่างน้อย 1 รอบ
+    //  เช็คว่าทุกวันต้องมีเวลาอย่างน้อย 1 รอบ
     for (const [dateStr, theatersOfDay] of Object.entries(dayTimeMap)) {
       let totalTimesInDay = 0;
 
@@ -374,7 +358,7 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
       }
     }
 
-    toast.loading('กำลังสร้างรอบหนัง...');
+    toast.loading('กำลังสร้างรอบหนัง...'); // แสดง loading แบบ persistent
 
     try {
       // loop วัน
@@ -431,9 +415,8 @@ export default function AddShowtime({ onSuccess }: { onSuccess: () => void }) {
     }
   };
 
-  // ---------------------------------------------------------
   //  UI ส่วน Dialog
-  // ---------------------------------------------------------
+
   const sortedDates = Object.keys(dayTimeMap).sort();
 
   return (

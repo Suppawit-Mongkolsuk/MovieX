@@ -12,7 +12,7 @@ const QRCodePopup: React.FC<QRCodePopupProps> = ({
   onCancel,
 }) => {
   const promptpayId = '0917127963';
-  const qrCodeUrl = `https://promptpay.io/${promptpayId}/${amount}`;
+  const qrCodeUrl = `https://promptpay.io/${promptpayId}/${amount}`; // ใช้ promptpay.io สร้างรูป QR แบบ dynamic ตามยอด
 
   return (
     <div

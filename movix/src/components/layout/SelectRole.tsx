@@ -39,6 +39,7 @@ export const BaseSelectRole = ({
             className="cursor-pointer px-3 py-2 hover:bg-movix-gold/20 flex items-center justify-between"
           >
             <Select.ItemText>Users</Select.ItemText>
+            {/* เช็กค่าที่ select อยู่เพื่อนำไอคอน check มาโชว์ */}
             {value === 'User' && <Check size={16} className="text-green-400" />}
           </Select.Item>
 

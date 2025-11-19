@@ -39,6 +39,7 @@ interface Theater {
 const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  // ดึง state ที่ถูกส่งมาจากหน้า Seat (รายละเอียดการจอง)
   const data = location.state as
     | {
         selectedSeats: Seat[];
@@ -50,11 +51,13 @@ const Payment = () => {
       }
     | undefined;
 
+  // state ควบคุม popup/ dialog และผู้ใช้ที่ล็อกอิน
   const [showQR, setShowQR] = useState(false);
   const [showCardDialog, setShowCardDialog] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    // หา user ที่กำลังล็อกอินอยู่เพื่อผูกกับ booking
     const fetchUser = async () => {
       try {
         const res = await axios.get(
@@ -88,6 +91,7 @@ const Payment = () => {
 
   const seatNames = selectedSeats.map((s: Seat) => s.seatNumber).join(', ');
 
+  // ส่งข้อมูล booking + บันทึกที่นั่งเป็นสถานะ booked
   const handleConfirmPayment = async (paymentMethod: string) => {
     try {
       await axios.post('https://68f0fcef0b966ad50034f883.mockapi.io/booking', {

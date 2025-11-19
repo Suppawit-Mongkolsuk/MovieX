@@ -6,19 +6,23 @@ import axios from 'axios';
 import type { User } from '../../api/typeuser';
 
 const ForgotPasswordForm: React.FC = () => {
+  // state สำหรับจัดการอินพุต/เอฟเฟกต์ต่าง ๆ ในหน้า
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
+  // state แสดงข้อความสำเร็จ + สั่งให้ปุ่มมีแอนิเมชันเด้ง
   const [success, setSuccess] = useState('');
   const [shake, setShake] = useState(false);
   const [successEffect, setSuccessEffect] = useState(false);
 
+  // state ของภาพ background slide + การเฟดเข้า/ออกทั้งหน้า
   const [currentImage, setCurrentImage] = useState(0);
   const [fade, setFade] = useState(true);
   const [pageFade, setPageFade] = useState(true);
 
   const navigate = useNavigate();
 
+  // รายการภาพพื้นหลังที่จะวนแสดงเพื่อสร้างบรรยากาศให้หน้า
   const images = [
     '/src/assets/Bg1.jpg',
     '/src/assets/Bg2.jpg',
@@ -34,6 +38,7 @@ const ForgotPasswordForm: React.FC = () => {
     '/src/assets/Bg12.jpg',
   ];
 
+  // เปลี่ยนภาพ background ทุก ๆ 4.5 วินาที พร้อมทำ fade out -> fade in
   useEffect(() => {
     const interval = setInterval(() => {
       setFade(false);
@@ -46,10 +51,11 @@ const ForgotPasswordForm: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ฟังก์ชันจัดการเมื่อผู้ใช้ขอรีเซ็ตรหัสผ่าน
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ ตรวจสอบว่าใส่อีเมลหรือยัง
+    // ตรวจสอบว่าใส่อีเมลหรือยัง
     if (!email.trim()) {
       setError('⚠️ กรุณากรอกอีเมลของคุณ');
       setShake(true);
@@ -57,30 +63,30 @@ const ForgotPasswordForm: React.FC = () => {
     }
 
     try {
-      // ✅ 1. ดึงข้อมูลทั้งหมดจาก MockAPI (เช็คว่าอีเมลนี้มีอยู่ไหม)
+      // ดึงข้อมูลทั้งหมดจาก MockAPI (เช็คว่าอีเมลนี้มีอยู่ไหม)
       const res = await axios.get(
         'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
       );
       const users = res.data;
 
-      // ✅ 2. หาผู้ใช้ที่อีเมลตรงกับที่กรอก
+      // หาผู้ใช้ที่อีเมลตรงกับที่กรอก
       const foundUser = users.find((u: User) => u.gmail === email);
 
       if (foundUser) {
-        // ✅ 3. ถ้าพบอีเมล ให้ถามรหัสผ่านใหม่
+        // ถ้าพบอีเมล ให้ถามรหัสผ่านใหม่
         const newPassword = prompt('กรุณากรอกรหัสผ่านใหม่:');
         if (!newPassword) {
           alert('❌ กรุณากรอกรหัสผ่านใหม่ให้เรียบร้อย');
           return;
         }
 
-        // ✅ 4. อัปเดตรหัสผ่านใหม่ใน MockAPI ด้วย PUT
+        // อัปเดตรหัสผ่านใหม่ใน MockAPI ด้วย PUT
         await axios.put(
           `https://68f0fcef0b966ad50034f883.mockapi.io/Login/${foundUser.id}`,
           { pass: newPassword }
         );
 
-        // ✅ 5. แจ้งผลและกลับไปหน้า Login
+        //  แจ้งผลและกลับไปหน้า Login
         setSuccess('✅ เปลี่ยนรหัสผ่านเรียบร้อยแล้ว!');
         setError('');
         setSuccessEffect(true);
@@ -89,7 +95,7 @@ const ForgotPasswordForm: React.FC = () => {
           navigate('/login');
         }, 1500);
       } else {
-        // ❌ ถ้าไม่พบอีเมล
+        //  ถ้าไม่พบอีเมล
         setError('❌ ไม่พบอีเมลนี้ในระบบ');
         setShake(true);
       }
@@ -103,6 +109,7 @@ const ForgotPasswordForm: React.FC = () => {
   };
 
   return (
+    // motion.div ตัวนอกสุด สำหรับ fade-in/out ทั้งหน้าเวลาเปลี่ยนไป login
     <motion.div
       className="relative min-h-screen w-full flex items-center justify-center overflow-hidden"
       initial={{ opacity: 0 }}

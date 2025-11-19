@@ -29,6 +29,7 @@ export default function UploadImage({
   showActions = false,
   renderActions,
 }: UploadImageProps) {
+  // เก็บไฟล์ที่เลือกไว้ใน state พร้อมสถานะอัปโหลดและรูป preview
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -43,6 +44,7 @@ export default function UploadImage({
       formData.append('file', fileToUpload);
       formData.append('upload_preset', uploadPreset);
 
+      // ยิงตรงไปที่ Cloudinary REST API
       const res = await fetch(
         'https://api.cloudinary.com/v1_1/da1kj73c0/image/upload',
         { method: 'POST', body: formData }
@@ -78,6 +80,7 @@ export default function UploadImage({
     setPreview(f ? URL.createObjectURL(f) : null);
 
     if (auto && f) {
+      // ถ้าตั้ง auto = true ก็อัปโหลดทันทีหลังเลือก
       await upload(f); // ส่งไฟล์เข้า upload โดยตรง
     }
   };
@@ -111,11 +114,13 @@ export default function UploadImage({
         className="hidden"
       />
 
-      {/* 3 ทางเลือกสำหรับปุ่ม */}
+      {/* ทางเลือกสำหรับปุ่ม */}
       {renderActions
-        ? renderActions({ upload, clear, uploading, hasFile: !!file, preview })
+        ? // ถ้า parent ส่ง renderActions มา จะยก control ให้ภายนอกสร้างปุ่มเอง
+          renderActions({ upload, clear, uploading, hasFile: !!file, preview })
         : showActions &&
           !auto && (
+            // โหมด fallback: แสดงปุ่มอัปโหลด/ล้าง/ยกเลิกในคอมโพเนนต์
             <div className="flex gap-3 mt-2">
               <Button
                 variant="primary"

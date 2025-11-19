@@ -13,7 +13,7 @@ export default function DeleteTheaterButton({
   locationId: string;
   onSuccess: () => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // toggle dialog ยืนยันลบ
 
   const handleDelete = async () => {
     toast.loading('กำลังลบโรง...');
@@ -37,7 +37,7 @@ export default function DeleteTheaterButton({
 
       toast.dismiss();
       toast.success('ลบโรงสำเร็จ');
-      onSuccess();
+      onSuccess(); // แจ้ง parent ให้ refresh list
     } catch (e) {
       console.error(e);
       toast.error('ลบโรงไม่สำเร็จ');

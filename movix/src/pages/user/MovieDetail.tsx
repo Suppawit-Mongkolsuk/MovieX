@@ -7,10 +7,12 @@ import TrailerPlayer from '../../components/layout/TrailerPlayer';
 import ShowtimeSection from '../../components/layout/showtime';
 
 export default function MovieDetail() {
+  // เก็บข้อมูลหนังทั้งหมดเพื่อนำมาเลือกเฉพาะเรื่องที่ตรงกับพารามิเตอร์
   const [movies, setGetMovies] = useState<Movie[]>([]);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
+    // โหลดข้อมูลหนังจาก MockAPI เมื่อหน้าเพิ่งเปิด
     const loadMovies = async () => {
       const data = await getMovies();
       setGetMovies(data);
@@ -18,6 +20,7 @@ export default function MovieDetail() {
     loadMovies();
   }, []);
 
+  // หาหนังที่ movieID ตรงกับ params จาก URL
   const movie = movies.find((m) => m.movieID.toString() === id);
 
   if (!movie) {
@@ -50,10 +53,12 @@ export default function MovieDetail() {
 
         {/* วิดีโอ Trailer */}
         <div className="w-full md:w-3/3 shadow-xl shadow-black/40">
+          {/* TrailerPlayer จะจัดการแปลง URL เป็น iframe เอง */}
           <TrailerPlayer url={movie.trailer} title={movie.title} />
         </div>
       </div>
       <div className="w-full mt-12 px-6 md:px-12">
+        {/* แสดงตารางรอบฉายของหนังเรื่องนี้ */}
         <ShowtimeSection movieId={movie.movieID} />
       </div>
     </div>

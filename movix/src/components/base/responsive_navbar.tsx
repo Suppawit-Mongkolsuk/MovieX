@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavbarmenuAdmin } from '../../data/Navbar';
 import type { User } from '../../api/typeuser';
+// เมนูสำหรับมือถือ/จอเล็ก เปิดปิดด้วยแอนิเมชัน และตรวจ role เพื่อโชว์เมนู admin เมื่อจำเป็น
 interface ResponsiveProps {
   open: boolean;
 }
@@ -18,6 +19,7 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
         const Role = await axios.get(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
+        // หา user ที่ล็อกอินอยู่ เพื่อดูว่าเป็น Admin หรือไม่
         const loggedInUser = (Role.data as User[]).find(
           (user) => user.isLogin === true
         );
@@ -42,6 +44,7 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
             className="fixed top-16 left-0 w-full h-screen z-20"
           >
             <div className="uppercase bg-black/50 py-10 m-4 rounded-3xl flex flex-col items-center gap-10 md:hidden">
+              {/* เช็ค role เพื่อแสดงเมนู */}
               {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
                 (item) => (
                   <a

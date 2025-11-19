@@ -37,6 +37,7 @@ export default function Seat() {
   const { showtimeId } = useParams();
   const navigate = useNavigate();
 
+  // state สำหรับข้อมูลที่ต้องใช้ในการวาดที่นั่ง + ตรวจสอบผู้ใช้ล็อกอินไหม
   const [showtime, setShowtime] = useState<Showtime | null>(null);
   const [movie, setMovie] = useState<Movie | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
@@ -46,6 +47,7 @@ export default function Seat() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // โหลดรายละเอียด (showtime/movies/location/theater) ตาม id ที่รับจาก route
     const load = async () => {
       toast.loading('กำลังโหลดข้อมูล...');
 
@@ -81,6 +83,7 @@ export default function Seat() {
   }, [showtimeId]);
 
   useEffect(() => {
+    // ตรวจสอบว่ามี user ไหนกำลังล็อกอินบ้าง เพื่อใช้ control ปุ่ม proceed
     const fetchUser = async () => {
       try {
         const res = await axios.get(
@@ -181,6 +184,7 @@ export default function Seat() {
               },
             })
           }
+          // ส่ง flag isLoggedIn ไปเงื่อนไขการกดชำระเงิน
           isLoggedIn={isLoggedIn}
         />
       </div>

@@ -57,9 +57,9 @@ export const ConfirmRoleDialog = ({
                 variant="primary"
                 size="md"
                 onClick={() => {
-                  onConfirm?.();
+                  onConfirm?.(); // asset: ให้ parent เปลี่ยน role จริง
                   setTimeout(() => {
-                    toast.success('แก้ไขเสร็จสิ้น ✅');
+                    toast.success('แก้ไขเสร็จสิ้น ✅'); // หน่วงเล็กน้อยให้ animation ทัน
                   }, 800);
                 }}
               >

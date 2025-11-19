@@ -17,6 +17,7 @@ const suggestionCategories = [
 ];
 
 const About = () => {
+  // state หลักของฟอร์ม feedback
   const [form, setForm] = useState<Suggestion>({
     name: '',
     email: '',
@@ -26,15 +27,18 @@ const About = () => {
   });
   const [status, setStatus] = useState<'idle' | 'sending' | 'done'>('idle');
 
+  // เช็กว่ากรอกครบหรือยัง เพื่อนำไป disable ปุ่มส่ง
   const canSubmit = useMemo(
     () => form.name.trim() && form.email.trim() && form.message.trim(),
     [form]
   );
 
+  // helper สำหรับอัปเดตฟิลด์ต่าง ๆ โดยใช้ key
   const handleChange = (key: keyof Suggestion, value: string | number) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
+  // จำลองการส่งฟอร์ม: เปลี่ยน status, รอ 1.2 วิ แล้วรีเซ็ตฟอร์มกลับค่าเริ่มต้น
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit || status === 'sending') return;
@@ -160,6 +164,7 @@ const About = () => {
               </div>
             </form>
 
+            {/* card ตัวอย่างว่าแอดมินจะเห็นข้อมูล preview อะไรบ้าง */}
             <aside className="rounded-3xl border border-white/10 p-6 shadow-[0_25px_60px_rgba(0,0,0,0.4)] backdrop-blur-lg">
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">
                 แอดมินจะเห็นอะไร

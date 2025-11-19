@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Admin } from '../../data/Navbar';
 import type { User } from '../../api/typeuser';
+// เมนู responsive สำหรับฝั่งแอดมิน
 interface ResponsiveProps {
   open: boolean;
 }
@@ -18,12 +19,14 @@ const ResponsiveAdmin: React.FC<ResponsiveProps> = ({ open }) => {
         const Role = await axios.get(
           'https://68f0fcef0b966ad50034f883.mockapi.io/Login'
         );
+        // ดึง user ที่ล็อกอินอยู่เพื่อรู้ว่า role คือ Admin หรือไม่
         const loggedInUser = (Role.data as User[]).find(
           (user) => user.isLogin === true
         );
         setUserRole(loggedInUser ? loggedInUser.role : null);
       } catch (error) {
         console.log('โหลดข้อมูลผู้ใช้ไม่สำเร็จ:', error);
+        // ถ้าเรียก API พลาดให้ fallback เป็น null เพื่อไม่โชว์เมนูผิด role
         setUserRole(null);
       }
     };

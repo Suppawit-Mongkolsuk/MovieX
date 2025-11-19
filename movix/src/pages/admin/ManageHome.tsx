@@ -17,10 +17,11 @@ interface User {
 }
 
 const ManageHome = () => {
+  // เก็บข้อมูลผู้ใช้ทั้งหมด + รายการที่ผ่านการค้นหาแล้ว
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
-  // state สำหรับ popup
+  // state สำหรับ popup ยืนยันการเปลี่ยน role
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pendingRole, setPendingRole] = useState<string>('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -41,14 +42,14 @@ const ManageHome = () => {
     fetchUsers();
   }, []);
 
-  //  ฟังก์ชันเปิด popup
+  // เมื่อมีการเลือก role ใหม่จาก dropdown จะเปิด dialog ให้ยืนยัน
   const handleSelectRole = (user: User, newRole: string) => {
     setPendingRole(newRole);
     setSelectedUser(user);
     setConfirmOpen(true);
   };
 
-  // ยืนยันเปลี่ยน role
+  // ยืนยันเปลี่ยน role -> ยิง PUT แล้วปิด dialog
   const handleConfirm = async () => {
     if (!selectedUser) return;
     await handleRoleChange(selectedUser.id, pendingRole);
@@ -57,14 +58,14 @@ const ManageHome = () => {
     setPendingRole('');
   };
 
-  // ยกเลิก
+  // ปิด popup โดยไม่ทำอะไร
   const handleCancel = () => {
     setConfirmOpen(false);
     setSelectedUser(null);
     setPendingRole('');
   };
 
-  // ค้นหาผู้ใช้จากอีเมล ชื่อ หรือเบอร์โทร
+  // ค้นหาผู้ใช้จากอีเมล ชื่อ หรือเบอร์โทร (ไม่กรอก = รีเซ็ต)
   const handleSearch = (query: string) => {
     if (!query.trim()) {
       setFilteredUsers(users);
@@ -167,7 +168,7 @@ const ManageHome = () => {
         </div>
       </div>
 
-      {/* Popup ยืนยันการเปลี่ยน Role */}
+      {/* Popup ยืนยันการเปลี่ยน Role (ดึงชื่อและ role ล่าสุดไปโชว์ใน dialog) */}
       <ConfirmRoleDialog
         open={confirmOpen}
         onConfirm={handleConfirm}

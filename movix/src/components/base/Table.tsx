@@ -1,5 +1,7 @@
 import * as ScrollArea from '@radix-ui/react-scroll-area';
 
+// ตารางพื้นฐานที่ใช้ซ้ำได้ รับ props เป็น columns, data, renderRow
+// //ฟังก์ชันสำหรับเรนเดอร์แต่ละแถว
 interface BaseTableProps<T> {
   columns: string[];
   data: T[];
@@ -62,7 +64,7 @@ export function BaseTable<T>({ columns, data, renderRow }: BaseTableProps<T>) {
           </table>
         </ScrollArea.Viewport>
 
-        {/* ✅ scrollbar ด้านข้าง */}
+        {/*  scrollbar ด้านข้าง */}
         <ScrollArea.Scrollbar
           orientation="vertical"
           className="flex select-none touch-none p-0.5 transition-colors bg-transparent"
@@ -70,7 +72,7 @@ export function BaseTable<T>({ columns, data, renderRow }: BaseTableProps<T>) {
           <ScrollArea.Thumb className="flex-1 rounded-full bg-white/40 hover:bg-white/60" />
         </ScrollArea.Scrollbar>
 
-        {/* ✅ scrollbar ด้านล่าง */}
+        {/*  scrollbar ด้านล่าง */}
         <ScrollArea.Scrollbar
           orientation="horizontal"
           className="flex select-none touch-none h-2 transition-colors bg-transparent"

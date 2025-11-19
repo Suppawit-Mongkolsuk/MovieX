@@ -19,7 +19,7 @@ interface Showtime {
   enddate: string;
   times: string[];
 }
-
+// ปุ่มลบรอบหนัง
 export default function DeleteShowtimeButton({
   movieID,
   locationId,
@@ -79,11 +79,13 @@ export default function DeleteShowtimeButton({
       toast.error('ลบไม่สำเร็จ!');
     }
   };
-
+  // UI ปุ่มลบพร้อมกล่องยืนยัน
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <Button className="bg-red-500 text-white px-3 py-1">ลบ</Button>
+        <Button variant="danger" size="md">
+          ลบ
+        </Button>
       </Dialog.Trigger>
 
       <Dialog.Portal>
