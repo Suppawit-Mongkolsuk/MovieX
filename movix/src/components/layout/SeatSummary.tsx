@@ -29,22 +29,25 @@ export default function SeatSummary({
   };
 
   return (
-    <>
-      <div className="mt-6 p-4 bg-white/10 rounded-lg text-white flex justify-between">
-        <div>
-          <p className="font-bold text-lg">SEATS:</p>
-          <p>
+    <div className="space-y-4">
+      <div className="rounded-3xl border border-white/15 bg-white/5 p-5 backdrop-blur-lg text-white/90 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <p className="font-semibold text-sm text-white/70">SEATS</p>
+          <p className="text-base sm:text-lg text-white">
             {selectedSeats.length > 0
               ? selectedSeats.map((s) => s.seatNumber).join(', ')
-              : '-'}
+              : 'ยังไม่ได้เลือกที่นั่ง'}
           </p>
         </div>
 
-        <div className="text-right">
-          <p className="font-bold text-lg">Total Price:</p>
-          <p>{totalPrice} THB</p>
+        <div className="text-left sm:text-right">
+          <p className="font-semibold text-sm text-white/70">TOTAL</p>
+          <p className="text-xl font-bold text-movix-gold">
+            {totalPrice.toLocaleString()} THB
+          </p>
         </div>
       </div>
+
       {selectedSeats.length > 0 && (
         <button
           onClick={() => {
@@ -54,15 +57,15 @@ export default function SeatSummary({
             }
             handleButtonClick();
           }}
-          className={`mt-4 px-4 py-2 rounded-lg w-full transition ${
+          className={`w-full rounded-3xl px-4 py-3 font-semibold transition shadow-[0_10px_30px_rgba(0,0,0,0.35)] ${
             isLoggedIn
-              ? 'bg-yellow-500 text-white hover:bg-amber-600 cursor-pointer'
-              : 'bg-gray-500 text-gray-300 opacity-50'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-300 text-black hover:brightness-110'
+              : 'bg-gray-500 text-gray-300 opacity-60'
           }`}
         >
           จ่ายตัง
         </button>
       )}
-    </>
+    </div>
   );
 }

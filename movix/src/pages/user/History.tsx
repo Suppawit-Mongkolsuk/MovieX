@@ -104,6 +104,8 @@ const History = () => {
 
                   <p className="text-gray-200 mb-1">
                     วันที่: <span className="text-white">{booking.date}</span>
+                  </p>
+                  <p className="text-gray-200 mb-1">
                     เวลา: <span className="text-white">{booking.time}</span>
                   </p>
 
@@ -119,11 +121,6 @@ const History = () => {
                     <span className="text-green-400 font-semibold">
                       {booking.totalPrice} THB
                     </span>
-                  </p>
-
-                  <p className="text-gray-200">
-                    วิธีชำระ:{' '}
-                    <span className="text-white">{booking.paymentMethod}</span>
                   </p>
                   <Dialog.Root>
                     <Dialog.Trigger asChild>

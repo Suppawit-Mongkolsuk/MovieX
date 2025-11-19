@@ -100,10 +100,10 @@ export default function Seat() {
   }
 
   return (
-    <div className="text-white px-4 sm:px-6 lg:px-10 pt-12 pb-14 max-w-6xl mx-auto">
+    <div className="text-white px-4 sm:px-6 lg:px-10 pt-20 pb-16 max-w-6xl mx-auto space-y-10">
       {/* Header */}
       <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.35)]">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center">
+        <div className="flex flex-col xl:flex-row gap-6 xl:gap-12 items-center xl:items-start">
           {/* โปสเตอร์ */}
           <img
             src={movie.poster}
@@ -112,21 +112,21 @@ export default function Seat() {
           />
 
           {/* ข้อมูลหนัง */}
-          <div className="w-full">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+          <div className="w-full space-y-5">
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-white/60 mb-2">
+                <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-white/60 mb-2">
                   Showtime
                 </p>
                 <h2 className="text-2xl sm:text-3xl font-bold text-movix-gold tracking-wide">
                   {movie.title}
                 </h2>
               </div>
-              <div className="flex  mr-7">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {showtime.times.map((t) => (
                   <span
                     key={t}
-                    className="mt-6 px-4 py-2 bg-white/5 border border-white/15 rounded-full text-xs sm:text-sm"
+                    className="px-4 py-2 bg-white/5 border border-white/15 rounded-full text-xs sm:text-sm"
                   >
                     {t}
                   </span>
@@ -134,7 +134,7 @@ export default function Seat() {
               </div>
             </div>
 
-            <div className="mt-4 grid sm:grid-cols-2 gap-3 text-white/80 text-sm sm:text-base">
+            <div className="grid gap-3 text-white/80 text-sm sm:text-base sm:grid-cols-2">
               <p>
                 สาขา: <span className="text-white">{location.name}</span>
               </p>
@@ -157,7 +157,7 @@ export default function Seat() {
       </div>
 
       {/*  โครงที่นั่ง + Summary */}
-      <div className="mt-10 space-y-8">
+      <div className="space-y-8">
         <SeatLayout
           theater={theater}
           onSelectChange={(selected) => setSelectedSeats(selected)}

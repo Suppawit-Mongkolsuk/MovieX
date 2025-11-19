@@ -129,22 +129,26 @@ const Payment = () => {
     return <div>ข้อมูลไม่ครบ</div>;
 
   return (
-    <div className="text-white px-4 sm:px-6 pt-12 pb-16 max-w-5xl mx-auto space-y-8">
-      <div>
-        <p className="text-sm uppercase tracking-[0.3em] text-white/60">
+    <div className="text-white px-4 sm:px-6 pt-16 pb-20 max-w-6xl mx-auto space-y-8">
+      <div className="space-y-2 text-center sm:text-left">
+        <p className="text-xs sm:text-sm uppercase tracking-[0.35em] text-white/50">
           ชำระเงิน
         </p>
-        <h1 className="text-3xl font-bold mt-1">Payment</h1>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h1 className="text-3xl sm:text-4xl font-bold">Payment</h1>
+        </div>
       </div>
 
-      <section className="bg-white/10 border border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col lg:flex-row gap-6 shadow-[0_20px_45px_rgba(0,0,0,0.35)]">
-        <img
-          src={movie.poster}
-          alt={movie.title}
-          className="w-full max-w-[220px] h-auto rounded-2xl border border-white/15 object-cover mx-auto"
-        />
+      <section className="bg-white/10 border border-white/15 rounded-3xl p-6 sm:p-8 flex flex-col gap-6 lg:flex-row lg:items-center shadow-[0_20px_45px_rgba(0,0,0,0.35)]">
+        <div className="flex justify-center">
+          <img
+            src={movie.poster}
+            alt={movie.title}
+            className="w-48 xs:w-56 sm:w-64 lg:w-56 rounded-2xl border border-white/15 object-cover shadow-[0_15px_40px_rgba(0,0,0,0.35)]"
+          />
+        </div>
 
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-5">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-white/60">
               Movie
@@ -192,28 +196,33 @@ const Payment = () => {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+      <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] items-start">
         <div className="space-y-4">
-          <h3 className="text-xl font-semibold">เลือกวิธีการชำระเงิน</h3>
+          <div className="space-y-1">
+            <h3 className="text-xl font-semibold">เลือกวิธีการชำระเงิน</h3>
+            <p className="text-sm text-white/60">
+              รองรับทุกอุปกรณ์ เลือกวิธีที่คุณสะดวกที่สุด
+            </p>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <Button
               onClick={() => setShowCardDialog(true)}
-              className="flex flex-col items-start gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400 transition text-left"
+              className="flex h-full w-full flex-col items-start gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left hover:border-amber-400"
             >
               <span className="text-base font-semibold">
                 บัตรเครดิต / เดบิต
               </span>
               <span className="text-sm text-white/70">
-                รองรับ Visa, MasterCard และบัตรชั้นนำ
+                รองรับ Visa, MasterCard และอื่น ๆ
               </span>
             </Button>
             <Button
               onClick={() => setShowQR(true)}
-              className="flex flex-col items-start gap-2 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-amber-400 transition text-left"
+              className="flex h-full w-full flex-col items-start gap-2 rounded-2xl border border-white/10 bg-white/5 p-4 text-left hover:border-amber-400"
             >
               <span className="text-base font-semibold">QR PromptPay</span>
               <span className="text-sm text-white/70">
-                สแกนจ่ายผ่านแอปธนาคารที่รองรับ
+                สแกนจ่ายผ่านแอปธนาคารได้ทันที
               </span>
             </Button>
           </div>
@@ -227,6 +236,7 @@ const Payment = () => {
             setShowQR(false);
             handleConfirmPayment('qr');
           }}
+          onCancel={() => setShowQR(false)}
         />
       )}
 

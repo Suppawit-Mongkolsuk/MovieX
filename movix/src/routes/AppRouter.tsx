@@ -9,7 +9,6 @@ import History from '../pages/user/History';
 import Movie from '../pages/user/Movie';
 import Payment from '../pages/user/Payment';
 import Seat from '../pages/user/Seat';
-import Ticket from '../pages/user/Ticket';
 
 /*ADMIN PAGES*/
 import ManageMovies from '../pages/admin/ManageMovie';
@@ -32,7 +31,6 @@ const AppRouter = () => {
         <Route path="/moviedetail/:id" element={<MovieDetail />} />
         <Route path="/seat/:showtimeId" element={<Seat />} />
         <Route path="/payment" element={<Payment />} />
-        <Route path="/ticket" element={<Ticket />} />
         <Route path="/history" element={<History />} />
 
         {/* Admin Routes */}
