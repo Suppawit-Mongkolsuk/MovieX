@@ -4,6 +4,7 @@ import { Navbarmenu } from '../../data/Navbar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { NavbarmenuAdmin } from '../../data/Navbar';
+import { NavLink } from 'react-router-dom';
 import type { User } from '../../api/typeuser';
 // เมนูสำหรับมือถือ/จอเล็ก เปิดปิดด้วยแอนิเมชัน และตรวจ role เพื่อโชว์เมนู admin เมื่อจำเป็น
 interface ResponsiveProps {
@@ -47,13 +48,13 @@ const Responsive: React.FC<ResponsiveProps> = ({ open }) => {
               {/* เช็ค role เพื่อแสดงเมนู */}
               {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
                 (item) => (
-                  <a
+                  <NavLink
                     key={item.id}
-                    href={item.link}
+                    to={item.link}
                     className="text-white text-xl font-semibold"
                   >
                     {item.title}
-                  </a>
+                  </NavLink>
                 )
               )}
             </div>

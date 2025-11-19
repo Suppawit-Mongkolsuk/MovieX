@@ -3,6 +3,7 @@ import { RiMovie2AiLine } from 'react-icons/ri';
 import { Admin } from '../../data/Navbar';
 import { IoMdMenu } from 'react-icons/io';
 import ResponsiveAdmin from './responsive_navbarAdmin';
+import { NavLink } from 'react-router-dom';
 
 export function NavbarAdmin() {
   // state สำหรับเปิด/ปิดเมนู mobile
@@ -23,13 +24,13 @@ export function NavbarAdmin() {
           {/* Menu */}
           <div className="hidden md:flex items-center justify-center mx-auto space-x-8 font-medium">
             {Admin.map((item) => (
-              <a
+              <NavLink
                 key={item.id}
-                href={item.link}
+                to={item.link}
                 className="text-white hover:text-gray-700 transition-colors duration-200"
               >
                 {item.title}
-              </a>
+              </NavLink>
             ))}
           </div>
           <div className="flex gap-3 ml-auto">

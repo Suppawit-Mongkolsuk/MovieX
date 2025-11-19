@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'; // import useEffect, useState
+import { NavLink } from 'react-router-dom';
 import { Navbarmenu } from '../../data/Navbar';
 import { NavbarmenuAdmin } from '../../data/Navbar';
 import { RiMovie2AiLine } from 'react-icons/ri';
@@ -52,13 +53,13 @@ function Navbar() {
             {/* ถ้า userRole เป็น Admin ให้ใช้ NavbarmenuAdmin, ถ้าไม่ใช่หรือไม่มี role ให้ใช้ Navbarmenu */}
             {(userRole === 'Admin' ? NavbarmenuAdmin : Navbarmenu).map(
               (item) => (
-                <a
+                <NavLink
                   key={item.id}
-                  href={item.link}
+                  to={item.link}
                   className="text-white hover:text-gray-700 transition-colors duration-200"
                 >
                   {item.title}
-                </a>
+                </NavLink>
               )
             )}
           </div>

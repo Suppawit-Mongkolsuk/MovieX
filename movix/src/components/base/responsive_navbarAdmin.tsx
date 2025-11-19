@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Admin } from '../../data/Navbar';
 import type { User } from '../../api/typeuser';
+import { NavLink } from 'react-router-dom';
 // เมนู responsive สำหรับฝั่งแอดมิน
 interface ResponsiveProps {
   open: boolean;
@@ -46,13 +47,13 @@ const ResponsiveAdmin: React.FC<ResponsiveProps> = ({ open }) => {
           >
             <div className="uppercase bg-black/50 py-10 m-4 rounded-3xl flex flex-col items-center gap-10 md:hidden">
               {(userRole === 'Admin' ? Admin : []).map((item) => (
-                <a
+                <NavLink
                   key={item.id}
-                  href={item.link}
+                  to={item.link}
                   className="text-white text-xl font-semibold"
                 >
                   {item.title}
-                </a>
+                </NavLink>
               ))}
             </div>
           </motion.div>
